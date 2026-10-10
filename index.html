@@ -16,231 +16,291 @@
 
 <body>
 
-    <!-- Navigation -->
-    <header class="navbar">
-        <div class="nav-container">
-            <div class="brand">
-                <span class="brand-icon">🌱</span>
-                <div class="brand-text">
-                    <span class="brand-title">HealthyYou</span>
-                    <span class="brand-subtitle">Better Food • Stronger Body • Happier Life</span>
-                </div>
-            </div>
-            <nav class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#food">Food</a>
-                <a href="#exercise">Exercise</a>
-                <a href="#health">Health</a>
-                <a href="#habits">Habits</a>
-            </nav>
-            <div class="nav-actions">
-                <button class="lang-btn">বাংলা | EN</button>
-                <button class="nav-cta-btn" onclick="scrollToDashboard()">My Hub</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero-section" id="home">
-        <div class="hero-content">
-            <div class="badge">Your Health Journey Starts Here</div>
-            <h1 class="hero-heading">Healthy Body<br>Happy Mind<br><span class="highlight">Better You</span></h1>
-            <p class="hero-desc">Discover simple and practical ways to eat better, work out, build healthy habits and
-                live a longer, happier life — all in one place.</p>
-
-            <div class="hero-action-group">
-                <button class="primary-btn" onclick="openGoalSelector()">Start My Journey &rarr;</button>
-                <span class="sub-text">No account needed • Explore for free</span>
-            </div>
-        </div>
-        <div class="hero-image-wrap">
-            <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=80"
-                alt="Mindfulness & Nature" class="hero-img">
-            <div class="floating-badge">
-                <span>Small Changes</span>
-                <strong>Big Results</strong>
-            </div>
-        </div>
-    </section>
-
-    <!-- Quick Pillars -->
-    <section class="pillars-container">
-        <div class="pillar-card">
-            <div class="pillar-icon">🥗</div>
-            <h3>Healthy Food</h3>
-            <p>Nutritious meals, simple recipes, better choices.</p>
-        </div>
-        <div class="pillar-card">
-            <div class="pillar-icon">🏋️</div>
-            <h3>Daily Exercise</h3>
-            <p>Home & gym workouts, for every level.</p>
-        </div>
-        <div class="pillar-card">
-            <div class="pillar-icon">🫀</div>
-            <h3>Better Health</h3>
-            <p>Tips for a stronger and healthier you.</p>
-        </div>
-        <div class="pillar-card">
-            <div class="pillar-icon">🍃</div>
-            <h3>Good Habits</h3>
-            <p>Small habits, big improvements daily.</p>
-        </div>
-    </section>
-
-    <!-- Goal Selection -->
-    <section class="goal-section" id="goals">
-        <div class="section-tag">CHOOSE YOUR GOAL</div>
-        <h2 class="section-title">What do you want to improve?</h2>
-        <p class="section-subtitle">Select your focus and get personalized tips, plans and live daily tracker.</p>
-
-        <div class="goal-grid">
-            <div class="goal-card" onclick="selectGoal('Eat Healthier')">
-                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80"
-                    alt="Eat Healthier">
-                <div class="goal-body">
-                    <span class="tag-icon">🥗</span>
-                    <h4>Eat Healthier</h4>
-                    <p>Better food choices, more sustainable energy.</p>
-                    <button class="round-arrow">&rarr;</button>
-                </div>
-            </div>
-
-            <div class="goal-card" onclick="selectGoal('Get Fit')">
-                <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80"
-                    alt="Get Fit">
-                <div class="goal-body">
-                    <span class="tag-icon">🏋️</span>
-                    <h4>Get Fit</h4>
-                    <p>Simple routine workouts, genuine physical results.</p>
-                    <button class="round-arrow">&rarr;</button>
-                </div>
-            </div>
-
-            <div class="goal-card" onclick="selectGoal('Improve Health')">
-                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=500&q=80"
-                    alt="Improve Health">
-                <div class="goal-body">
-                    <span class="tag-icon">🫀</span>
-                    <h4>Improve Health</h4>
-                    <p>Feel good inside and out with sound sleep & water.</p>
-                    <button class="round-arrow">&rarr;</button>
-                </div>
-            </div>
-
-            <div class="goal-card" onclick="selectGoal('Build Habits')">
-                <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=500&q=80"
-                    alt="Build Habits">
-                <div class="goal-body">
-                    <span class="tag-icon">🍃</span>
-                    <h4>Build Habits</h4>
-                    <p>Small conscious steps, permanent lifestyle change.</p>
-                    <button class="round-arrow">&rarr;</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive Live Tracker & Weekly Analytics -->
-    <section class="tracker-dashboard" id="dashboard">
-        <div class="dashboard-header">
-            <div class="tag-pill">ACTIVE DASHBOARD</div>
-            <h2>Your Personal Health Hub</h2>
-            <p>Track today's habits and view your weekly consistency chart.</p>
-        </div>
-
-        <!-- Daily Status Counters -->
-        <div class="stats-row">
-            <div class="metric-card">
-                <div class="metric-icon">🍲</div>
-                <div class="metric-info">
-                    <span class="metric-label">Meals Logged</span>
-                    <h3 id="statMeals">0 / 4</h3>
-                </div>
-                <button class="log-btn" onclick="addMetric('meals')">+</button>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-icon">🏃</div>
-                <div class="metric-info">
-                    <span class="metric-label">Workouts</span>
-                    <h3 id="statWorkout">0 / 1</h3>
-                </div>
-                <button class="log-btn" onclick="addMetric('workout')">+</button>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-icon">💧</div>
-                <div class="metric-info">
-                    <span class="metric-label">Water Intake</span>
-                    <h3 id="statWater">0.0 L</h3>
-                </div>
-                <button class="log-btn" onclick="addMetric('water')">+250ml</button>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-icon">🌙</div>
-                <div class="metric-info">
-                    <span class="metric-label">Sleep Hours</span>
-                    <h3 id="statSleep">7.5 h</h3>
-                </div>
-                <button class="log-btn" onclick="logSleep()">Log</button>
-            </div>
-        </div>
-
-        <!-- Weekly Chart Section -->
-        <div class="chart-container-card">
-            <div class="chart-header">
-                <div>
-                    <h3>সাপ্তাহিক অগ্রগতি (Weekly Consistency)</h3>
-                    <p>গত ৭ দিনের স্বাস্থ্য স্কোর ও অভ্যাস কমপ্লিশন রেট</p>
-                </div>
-                <button class="reset-data-btn" onclick="resetDay()">Reset Today</button>
-            </div>
-            <canvas id="weeklyChart" width="800" height="280"></canvas>
-        </div>
-    </section>
-
-    <!-- Food Showcase Section -->
-    <section class="food-showcase" id="food">
-        <div class="food-content">
-            <div class="section-tag">HEALTHY FOOD</div>
-            <h2>Good Food Fuels Great Life</h2>
-            <p>Explore protein-rich egg recipes, balanced diets, clean fuel and energizing plans tailored to your
-                lifestyle.</p>
-            <button class="primary-btn" onclick="scrollToDashboard()">Log A Healthy Meal &rarr;</button>
-        </div>
-        <div class="food-image-wrap">
-            <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=700&q=80"
-                alt="Nutritious Bowl" class="food-img">
-        </div>
-    </section>
-
-    <!-- CTA Banner -->
-    <section class="bottom-cta-banner">
-        <div class="cta-inner">
-            <div>
-                <h2>আজই শুরু করুন একটি স্বাস্থ্যকর জীবনের পথে</h2>
-                <p>Your Health. Your Choice. Zero registration barrier.</p>
-            </div>
-            <button class="banner-btn" onclick="scrollToDashboard()">Start My Journey &rarr;</button>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-wrap">
-            <div>
+    <!-- ==================== PAGE 1: DEMO / LANDING SHOWCASE ==================== -->
+    <div id="landingView" class="page-view active">
+        <!-- Navbar -->
+        <header class="navbar">
+            <div class="nav-container">
                 <div class="brand">
                     <span class="brand-icon">🌱</span>
-                    <span class="brand-title">HealthyYou</span>
+                    <div class="brand-text">
+                        <span class="brand-title">HealthyYou</span>
+                        <span class="brand-subtitle">Better Food • Stronger Body • Happier Life</span>
+                    </div>
                 </div>
-                <p class="footer-sub">Simple habits, lasting wellness.</p>
+                <nav class="nav-links">
+                    <a href="#home">Home</a>
+                    <a href="#explore">Explore</a>
+                    <a href="#goals">Goals</a>
+                </nav>
+                <div class="nav-actions">
+                    <button class="lang-btn">বাংলা | EN</button>
+                    <button class="nav-cta-btn" onclick="navigateToDashboard()">Open Hub &rarr;</button>
+                </div>
             </div>
-            <div class="footer-note">
-                No account required • Auto-saved to your device
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section" id="home">
+            <div class="hero-content">
+                <div class="badge">Your Health Journey Starts Here</div>
+                <h1 class="hero-heading">Healthy Body<br>Happy Mind<br><span class="highlight">Better You</span></h1>
+                <p class="hero-desc">Discover simple and practical ways to eat better, work out, build healthy habits
+                    and live a longer, happier life — all in one place.</p>
+
+                <div class="hero-action-group">
+                    <button class="primary-btn" onclick="navigateToDashboard()">Start My Journey &rarr;</button>
+                    <span class="sub-text">No account needed • Explore demo & full features</span>
+                </div>
             </div>
-        </div>
-    </footer>
+            <div class="hero-image-wrap">
+                <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=80"
+                    alt="Mindfulness & Nature" class="hero-img">
+                <div class="floating-badge">
+                    <span>Small Changes</span>
+                    <strong>Big Results</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4 Pillars Demo -->
+        <section class="pillars-container">
+            <div class="pillar-card" onclick="navigateToDashboard('food')">
+                <div class="pillar-icon">🥗</div>
+                <h3>Healthy Food</h3>
+                <p>Nutritious meals, simple recipes, better choices.</p>
+            </div>
+            <div class="pillar-card" onclick="navigateToDashboard('workout')">
+                <div class="pillar-icon">🏋️</div>
+                <h3>Daily Exercise</h3>
+                <p>Home & gym workouts, for every level.</p>
+            </div>
+            <div class="pillar-card" onclick="navigateToDashboard('health')">
+                <div class="pillar-icon">🫀</div>
+                <h3>Better Health</h3>
+                <p>Tips for a stronger and healthier you.</p>
+            </div>
+            <div class="pillar-card" onclick="navigateToDashboard('habits')">
+                <div class="pillar-icon">🍃</div>
+                <h3>Good Habits</h3>
+                <p>Small habits, big improvements daily.</p>
+            </div>
+        </section>
+
+        <!-- Goals Showcase -->
+        <section class="goal-section" id="goals">
+            <div class="section-tag">CHOOSE YOUR GOAL</div>
+            <h2 class="section-title">What do you want to improve?</h2>
+            <p class="section-subtitle">Select your focus to preview your customized plan inside the Hub.</p>
+
+            <div class="goal-grid">
+                <div class="goal-card" onclick="navigateToDashboard('Eat Healthier')">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80"
+                        alt="Eat Healthier">
+                    <div class="goal-body">
+                        <span class="tag-icon">🥗</span>
+                        <h4>Eat Healthier</h4>
+                        <p>Better food choices, clean recipes & protein balance.</p>
+                        <button class="round-arrow">&rarr;</button>
+                    </div>
+                </div>
+
+                <div class="goal-card" onclick="navigateToDashboard('Get Fit')">
+                    <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80"
+                        alt="Get Fit">
+                    <div class="goal-body">
+                        <span class="tag-icon">🏋️</span>
+                        <h4>Get Fit</h4>
+                        <p>Simple routine home workouts & muscle tone.</p>
+                        <button class="round-arrow">&rarr;</button>
+                    </div>
+                </div>
+
+                <div class="goal-card" onclick="navigateToDashboard('Improve Health')">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=500&q=80"
+                        alt="Improve Health">
+                    <div class="goal-body">
+                        <span class="tag-icon">🫀</span>
+                        <h4>Improve Health</h4>
+                        <p>Deep sleep, hydration and stress relief.</p>
+                        <button class="round-arrow">&rarr;</button>
+                    </div>
+                </div>
+
+                <div class="goal-card" onclick="navigateToDashboard('Build Habits')">
+                    <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=500&q=80"
+                        alt="Build Habits">
+                    <div class="goal-body">
+                        <span class="tag-icon">🍃</span>
+                        <h4>Build Habits</h4>
+                        <p>7-day streak tracker and small daily wins.</p>
+                        <button class="round-arrow">&rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom CTA Banner -->
+        <section class="bottom-cta-banner">
+            <div class="cta-inner">
+                <div>
+                    <h2>আজই শুরু করুন একটি স্বাস্থ্যকর জীবনের পথে</h2>
+                    <p>Your Health. Your Choice. Zero registration barrier.</p>
+                </div>
+                <button class="banner-btn" onclick="navigateToDashboard()">Start My Journey &rarr;</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-wrap">
+                <div>
+                    <div class="brand">
+                        <span class="brand-icon">🌱</span>
+                        <span class="brand-title">HealthyYou</span>
+                    </div>
+                    <p class="footer-sub">Simple habits, lasting wellness.</p>
+                </div>
+                <div class="footer-note">
+                    No account needed • Explore demo & full hub
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- ==================== PAGE 2: PERSONAL HEALTH HUB (DETAILED APP) ==================== -->
+    <div id="dashboardView" class="page-view">
+        <!-- Hub Top Bar -->
+        <header class="navbar hub-navbar">
+            <div class="nav-container">
+                <button class="back-btn" onclick="navigateToLanding()">&larr; Back to Home</button>
+                <div class="brand">
+                    <span class="brand-icon">🌱</span>
+                    <span class="brand-title">Your Personal Health Hub</span>
+                </div>
+                <div class="hub-pill">Live Active</div>
+            </div>
+        </header>
+
+        <main class="hub-main-container">
+            <!-- Welcome Header -->
+            <div class="hub-greeting-card">
+                <div>
+                    <span class="hub-tag">DASHBOARD & DETAILS</span>
+                    <h2>Good Morning, Champ! ☀️</h2>
+                    <p>Small conscious steps every single day lead to massive lifetime health results.</p>
+                </div>
+                <button class="reset-today-btn" onclick="resetDay()">Reset Today's Log</button>
+            </div>
+
+            <!-- Live Counters -->
+            <div class="stats-row">
+                <div class="metric-card">
+                    <div class="metric-icon">🥗</div>
+                    <div class="metric-info">
+                        <span class="metric-label">Meals Logged</span>
+                        <h3 id="statMeals">0 / 4</h3>
+                    </div>
+                    <button class="log-btn" onclick="addMetric('meals')">+ Log</button>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">🏋️</div>
+                    <div class="metric-info">
+                        <span class="metric-label">Daily Workout</span>
+                        <h3 id="statWorkout">0 / 1</h3>
+                    </div>
+                    <button class="log-btn" onclick="addMetric('workout')">Done</button>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">💧</div>
+                    <div class="metric-info">
+                        <span class="metric-label">Water Intake</span>
+                        <h3 id="statWater">0.0 L</h3>
+                    </div>
+                    <button class="log-btn" onclick="addMetric('water')">+250ml</button>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">🌙</div>
+                    <div class="metric-info">
+                        <span class="metric-label">Sleep Hours</span>
+                        <h3 id="statSleep">7.5 h</h3>
+                    </div>
+                    <button class="log-btn" onclick="logSleep()">Set</button>
+                </div>
+            </div>
+
+            <!-- Weekly Analytics Chart Card -->
+            <div class="chart-container-card">
+                <div class="chart-header">
+                    <div>
+                        <h3>সাপ্তাহিক অগ্রগতি (Weekly Consistency Chart)</h3>
+                        <p>গত ৭ দিনের অভ্যাস ও স্বাস্থ্য স্কোর পর্যালোচনা (লাইভ হিসেব)</p>
+                    </div>
+                    <span class="badge-live">Updated Real-time</span>
+                </div>
+                <canvas id="weeklyChart" width="800" height="280"></canvas>
+            </div>
+
+            <!-- Detailed Content Sections (What's Inside) -->
+            <section class="detailed-guides">
+                <h2 class="guides-heading">স্বাস্থ্য ও অভ্যাসের বিস্তারিত গাইডসমূহ</h2>
+                <div class="guides-grid">
+                    <!-- Guide 1: Healthy Food -->
+                    <div class="guide-box">
+                        <div class="guide-icon">🍳</div>
+                        <h3>Healthy Food & Recipes</h3>
+                        <p class="guide-sub">ডিম, দুধ, উচ্চমানের প্রোটিন ও সহজ রেসিপি</p>
+                        <ul class="guide-list">
+                            <li><strong>সকালের নাস্তা:</strong> ২টি সেদ্ধ ডিম + কলা/ওটস বা বাদাম।</li>
+                            <li><strong>দুপুরের খাবার:</strong> ভাত/রুটির সাথে পর্যাপ্ত সবুজ শাকসবজি ও ডাল/মাছ/মুরগি।
+                            </li>
+                            <li><strong>হাইড্রেশন ফুয়েল:</strong> পর্যাপ্ত পানি, লেবু পানি বা গ্রিন টি।</li>
+                        </ul>
+                    </div>
+
+                    <!-- Guide 2: Exercise -->
+                    <div class="guide-box">
+                        <div class="guide-icon">🏃‍♂️</div>
+                        <h3>Daily Home Workout</h3>
+                        <p class="guide-sub">কোনো সরঞ্জাম ছাড়া ১৫-২০ মিনিটের সহজ ব্যায়াম</p>
+                        <ul class="guide-list">
+                            <li><strong>ওয়ার্ম আপ:</strong> ৩ মিনিট জাম্পিং জ্যাক ও স্ট্রেচিং।</li>
+                            <li><strong>বডিওয়েট:</strong> ১৫টি স্কোয়াট + ১০টি পুশ-আপ (৩ রাউন্ড)।</li>
+                            <li><strong>কোর স্ট্রেন্থ:</strong> ৩০-৪৫ সেকেন্ড প্ল্যাঙ্ক ও সাইকেল ক্রাঞ্চ।</li>
+                        </ul>
+                    </div>
+
+                    <!-- Guide 3: Sleep & Recovery -->
+                    <div class="guide-box">
+                        <div class="guide-icon">😴</div>
+                        <h3>Sleep & Stress Care</h3>
+                        <p class="guide-sub">পর্যাপ্ত ঘুম এবং মানসিক প্রশান্তি বজায় রাখার নিয়ম</p>
+                        <ul class="guide-list">
+                            <li>ঘুমানোর ৩০ মিনিট আগে মোবাইল স্ক্রিন থেকে দূরে থাকুন।</li>
+                            <li>প্রতিদিন নির্দিষ্ট সময়ে ঘুমাতে যান ও ৭-৮ ঘণ্টা ঘুম নিশ্চিত করুন।</li>
+                            <li>প্রতিদিন সকালে ৫ মিনিট গভীর শ্বাসের ব্যায়াম (Deep Breathing)।</li>
+                        </ul>
+                    </div>
+
+                    <!-- Guide 4: Habit Building -->
+                    <div class="guide-box">
+                        <div class="guide-icon">🎯</div>
+                        <h3>Good Habits Tracking</h3>
+                        <p class="guide-sub">স্থায়ী সুস্থ অভ্যাসের বিজ্ঞানসম্মত নিয়ম</p>
+                        <ul class="guide-list">
+                            <li><strong>2-Minute Rule:</strong> যেকোনো ভালো অভ্যাস ২ মিনিটের মতো করে শুরু করুন।</li>
+                            <li><strong>Visual Progress:</strong> প্রতিদিনের কাজ শেষ করে এই ড্যাশবোর্ডে মার্ক করুন।</li>
+                            <li><strong>Consistency:</strong> ২ দিনের বেশি গ্যাপ না দেওয়ার চেষ্টা করুন।</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script src="script.js"></script>
     <script>

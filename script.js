@@ -16,12 +16,26 @@ const statWorkout = document.getElementById('statWorkout');
 const statWater = document.getElementById('statWater');
 const statSleep = document.getElementById('statSleep');
 
-// Initialize Dashboard
+// View Switching: Landing (Demo) vs Dashboard (Detailed Hub)
+function navigateToDashboard(context) {
+    document.getElementById('landingView').classList.remove('active');
+    document.getElementById('dashboardView').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    renderStats();
+}
+
+function navigateToLanding() {
+    document.getElementById('dashboardView').classList.remove('active');
+    document.getElementById('landingView').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Render Tracker Values
 function renderStats() {
-    statMeals.textContent = `${todayData.meals} / 4`;
-    statWorkout.textContent = `${todayData.workout} / 1`;
-    statWater.textContent = `${todayData.water.toFixed(1)} L`;
-    statSleep.textContent = `${todayData.sleep} h`;
+    if (statMeals) statMeals.textContent = `${todayData.meals} / 4`;
+    if (statWorkout) statWorkout.textContent = `${todayData.workout} / 1`;
+    if (statWater) statWater.textContent = `${todayData.water.toFixed(1)} L`;
+    if (statSleep) statSleep.textContent = `${todayData.sleep} h`;
     saveData();
     drawWeeklyChart();
 }
@@ -44,9 +58,8 @@ function logSleep() {
 function saveData() {
     localStorage.setItem(TODAY_KEY, JSON.stringify(todayData));
 
-    // Update weekly dataset
-    let history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [60, 75, 80, 70, 85, 90, 0];
-    // Calculate today's completion percentage (out of 100)
+    // Weekly History Auto-Calculation
+    let history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [65, 75, 80, 70, 85, 90, 0];
     const score = Math.round(
         ((todayData.meals / 4) * 30) +
         (todayData.workout * 25) +
@@ -64,19 +77,6 @@ function resetDay() {
     }
 }
 
-function scrollToDashboard() {
-    document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
-}
-
-function openGoalSelector() {
-    document.getElementById('goals').scrollIntoView({ behavior: 'smooth' });
-}
-
-function selectGoal(goalName) {
-    alert(`"${goalName}" সিলেক্ট হয়েছে! নিচের ট্র্যাকার দিয়ে প্রতিদিনের প্রগ্রেস শুরু করুন।`);
-    scrollToDashboard();
-}
-
 // Canvas-based Weekly Chart
 function drawWeeklyChart() {
     const canvas = document.getElementById('weeklyChart');
@@ -85,13 +85,13 @@ function drawWeeklyChart() {
 
     const width = canvas.width;
     const height = canvas.height;
-    const history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [60, 70, 80, 65, 85, 90, 75];
+    const history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [65, 75, 80, 70, 85, 90, 75];
     const days = ['শনি', 'রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহ', 'আজ'];
 
     ctx.clearRect(0, 0, width, height);
 
     // Background Grid Lines
-    ctx.strokeStyle = '#e2e8f0';
+    ctx.strokeStyle = '#cbd5e1';
     ctx.lineWidth = 1;
     for (let i = 1; i <= 4; i++) {
         const y = (height - 50) * (i / 4);
@@ -101,17 +101,15 @@ function drawWeeklyChart() {
         ctx.stroke();
     }
 
-    const barWidth = 42;
+    const barWidth = 44;
     const spacing = (width - 80) / days.length;
 
-    // Draw Bars & Labels
     days.forEach((day, idx) => {
         const score = history[idx] || 20;
         const barHeight = ((height - 80) * (score / 100));
         const x = 50 + (idx * spacing);
         const y = height - 40 - barHeight;
 
-        // Bar Color Gradient
         const grad = ctx.createLinearGradient(0, y, 0, height - 40);
         grad.addColorStop(0, '#10b981');
         grad.addColorStop(1, '#064e3b');
@@ -121,18 +119,16 @@ function drawWeeklyChart() {
         ctx.roundRect(x, y, barWidth, barHeight, [8, 8, 0, 0]);
         ctx.fill();
 
-        // Day Label
-        ctx.fillStyle = '#64748b';
+        ctx.fillStyle = '#475569';
         ctx.font = '12px Plus Jakarta Sans, sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(day, x + (barWidth / 2), height - 15);
 
-        // Percentage Value
         ctx.fillStyle = '#0f172a';
         ctx.font = 'bold 11px Plus Jakarta Sans, sans-serif';
         ctx.fillText(`${score}%`, x + (barWidth / 2), y - 8);
     });
 }
 
-// Initial Call
+// Initial render
 renderStats();

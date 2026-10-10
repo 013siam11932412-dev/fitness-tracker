@@ -1,0 +1,2409 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>বিজ্ঞানসম্মত ফিটনেস ও ডায়েট ট্র্যাকার</title>
+    <meta name="theme-color" content="#10b981" />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-hover: #34d399;
+            --primary-glow: rgba(16, 185, 129, 0.4);
+            --primary-bg: rgba(16, 185, 129, 0.12);
+            --primary-border: rgba(16, 185, 129, 0.3);
+            --accent-secondary: #38bdf8;
+        }
+
+        [data-theme="cyan"] {
+            --primary: #06b6d4;
+            --primary-hover: #22d3ee;
+            --primary-glow: rgba(6, 182, 212, 0.4);
+            --primary-bg: rgba(6, 182, 212, 0.12);
+            --primary-border: rgba(6, 182, 212, 0.3);
+            --accent-secondary: #818cf8;
+        }
+
+        [data-theme="gold"] {
+            --primary: #f59e0b;
+            --primary-hover: #fbbf24;
+            --primary-glow: rgba(245, 158, 11, 0.4);
+            --primary-bg: rgba(245, 158, 11, 0.12);
+            --primary-border: rgba(245, 158, 11, 0.3);
+            --accent-secondary: #f43f5e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #06090e;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 16px;
+            overflow-x: hidden;
+        }
+
+        .screen-container {
+            width: 100%;
+            max-width: 460px;
+            margin-top: 20px;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 580px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card {
+            background-color: #0e131f;
+            border: 1px solid #1a2333;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: var(--primary-bg);
+            color: var(--primary);
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--primary-border);
+        }
+
+        .header h1,
+        .header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 10px 0 6px 0;
+            line-height: 1.3;
+        }
+
+        .header p,
+        .section-title p {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .auth-toggle {
+            display: flex;
+            background-color: #06090e;
+            padding: 4px;
+            border-radius: 10px;
+            margin: 18px 0 16px 0;
+            border: 1px solid #1a2333;
+        }
+
+        .auth-toggle-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .auth-toggle-btn.active {
+            background-color: var(--primary);
+            color: #06090e;
+        }
+
+        .section-title h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .section-title {
+            margin-bottom: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
+        .input-group label,
+        .group-title {
+            display: block;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-row .input-group {
+            flex: 1;
+        }
+
+        .input-group input,
+        .styled-input {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: #06090e;
+            border: 1px solid #243044;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .input-group input:focus,
+        .styled-input:focus {
+            border-color: var(--primary);
+        }
+
+        .bmi-feedback-card {
+            background-color: #06090e;
+            border: 1px dashed var(--primary);
+            padding: 14px;
+            border-radius: 10px;
+            margin: 16px 0;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .bmi-feedback-card .bmi-val {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .glow-button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: #06090e;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .glow-button:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .auth-msg {
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        .auth-msg.error {
+            color: #f87171;
+            display: block;
+        }
+
+        .option-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .radio-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .three-cols {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .two-cols {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .custom-radio input {
+            display: none;
+        }
+
+        .radio-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 8px;
+            background-color: #06090e;
+            border: 1px solid #243044;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #94a3b8;
+            cursor: pointer;
+            text-align: center;
+            min-height: 52px;
+        }
+
+        .radio-box span {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .custom-radio input:checked+.radio-box {
+            border-color: var(--primary);
+            background-color: var(--primary-bg);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 2px;
+        }
+
+        .user-greeting h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .streak-badge {
+            background-color: var(--primary-bg);
+            border: 1px solid var(--primary-border);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-picker {
+            display: flex;
+            background: #06090e;
+            border: 1px solid #1a2333;
+            padding: 3px;
+            border-radius: 20px;
+            gap: 4px;
+        }
+
+        .theme-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .theme-dot:hover {
+            transform: scale(1.15);
+        }
+
+        .theme-dot.active {
+            border-color: #ffffff;
+            transform: scale(1.15);
+        }
+
+        .theme-dot-emerald {
+            background: #10b981;
+        }
+
+        .theme-dot-cyan {
+            background: #06b6d4;
+        }
+
+        .theme-dot-gold {
+            background: #f59e0b;
+        }
+
+        .calendar-clock-card {
+            background: linear-gradient(135deg, #0e131f 0%, #131b2c 100%);
+            border: 1px solid #1f293d;
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calendar-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .calendar-day-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--primary);
+            background: var(--primary-bg);
+            border: 1px solid var(--primary-border);
+            padding: 2px 10px;
+            border-radius: 12px;
+            width: fit-content;
+        }
+
+        .calendar-date {
+            font-size: 13px;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .live-clock {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-secondary);
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
+
+        .tab-switcher {
+            display: flex;
+            gap: 8px;
+            background-color: #0e131f;
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid #1a2333;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: #06090e;
+            font-weight: 700;
+        }
+
+        .view-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .ring-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 16px 20px;
+        }
+
+        .ring-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .ring-bar {
+            stroke: var(--primary);
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .ring-text {
+            position: absolute;
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .percent-sign {
+            font-size: 13px;
+            color: var(--primary);
+            margin-left: 2px;
+        }
+
+        .ring-description h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .ring-description p {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            background-color: #06090e;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #1a2333;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            margin-right: 14px;
+            cursor: pointer;
+        }
+
+        .task-text strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .task-text small {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .water-card {
+            background-color: #0e131f;
+            border: 1px solid #1a2333;
+            padding: 16px;
+            border-radius: 16px;
+        }
+
+        .water-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .water-glasses-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .water-glass-btn {
+            background: #06090e;
+            border: 1px solid #243044;
+            border-radius: 10px;
+            padding: 10px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .water-glass-btn.drank {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+        }
+
+        .water-glass-icon {
+            font-size: 24px;
+        }
+
+        .water-glass-label {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+        .water-glass-btn.drank .water-glass-label {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+
+        .exercise-grid,
+        .food-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .exercise-card {
+            background-color: #090e17;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid #1a2333;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .exercise-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--primary-glow);
+        }
+
+        .exercise-visual-box {
+            width: 78px;
+            height: 78px;
+            min-width: 78px;
+            border-radius: 16px;
+            background: radial-gradient(circle at center, rgba(30, 41, 59, 0.8) 0%, #06090e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .glow-orange {
+            border-color: rgba(245, 158, 11, 0.35);
+            box-shadow: 0 0 14px rgba(245, 158, 11, 0.2);
+        }
+
+        .glow-purple {
+            border-color: rgba(168, 85, 247, 0.35);
+            box-shadow: 0 0 14px rgba(168, 85, 247, 0.2);
+        }
+
+        .exercise-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .exercise-info strong {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .exercise-info .target-muscle {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .exercise-badge {
+            background-color: rgba(31, 41, 55, 0.8);
+            border: 1px solid #374151;
+            color: var(--primary);
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .diet-dashboard-card {
+            background: #0e131f;
+            border: 1px solid #1a2333;
+            padding: 18px;
+            border-radius: 16px;
+        }
+
+        .diet-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 14px;
+            text-align: center;
+        }
+
+        .diet-stat-box {
+            background-color: #06090e;
+            border: 1px solid #1a2333;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .diet-stat-box span {
+            display: block;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .diet-stat-box strong {
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .diet-progress-bg {
+            background-color: #06090e;
+            height: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 12px;
+            border: 1px solid #1a2333;
+        }
+
+        .diet-progress-fill {
+            background: var(--primary);
+            height: 100%;
+            width: 0%;
+            border-radius: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .food-card {
+            background-color: #06090e;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #1a2333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .food-meta strong {
+            font-size: 13px;
+            display: block;
+        }
+
+        .food-meta span {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .food-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .food-badge {
+            background-color: #1a2333;
+            color: var(--primary);
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .add-food-btn {
+            background-color: var(--primary-bg);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .add-food-btn:hover {
+            background-color: var(--primary);
+            color: #06090e;
+        }
+
+        .delete-food-btn {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid #ef4444;
+            color: #f87171;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .delete-food-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
+        .analytics-card {
+            background: #0e131f;
+            border: 1px solid #1a2333;
+            padding: 20px;
+            border-radius: 16px;
+        }
+
+        .chart-summary-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #06090e;
+            border: 1px solid #1a2333;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 12px 0 16px 0;
+        }
+
+        .chart-container {
+            background: #06090e;
+            border: 1px solid #1a2333;
+            border-radius: 12px;
+            padding: 16px 12px 12px 12px;
+            position: relative;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 170px;
+            overflow: visible;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background-color: transparent;
+            border: 1px solid #243044;
+            color: #94a3b8;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background-color: #1a2333;
+            color: #ffffff;
+        }
+
+        .reset-btn {
+            background: #131b2a;
+            color: #f87171;
+            border: 1px solid #ef4444;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+
+        .reset-btn .spin-icon {
+            display: inline-block;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reset-btn.spinning .spin-icon {
+            transform: rotate(360deg);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            z-index: 9999;
+        }
+
+        .modal-content {
+            background: #0e131f;
+            border: 1px solid var(--primary);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 440px;
+            padding: 22px;
+            box-shadow: 0 10px 40px var(--primary-glow);
+            position: relative;
+            animation: modalFadeIn 0.25s ease-out;
+            max-height: 92vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                transform: scale(0.92);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #1a2333;
+            border: none;
+            color: #94a3b8;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close-btn:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        @keyframes neonPulseGlow {
+            0% {
+                filter: drop-shadow(0 0 2px var(--primary));
+                opacity: 0.6;
+            }
+
+            50% {
+                filter: drop-shadow(0 0 12px var(--primary-hover)) drop-shadow(0 0 20px var(--primary));
+                opacity: 1;
+            }
+
+            100% {
+                filter: drop-shadow(0 0 2px var(--primary));
+                opacity: 0.6;
+            }
+        }
+
+        .pulsing-muscle {
+            animation: neonPulseGlow 1.4s infinite ease-in-out;
+        }
+
+        .timer-container {
+            background: #06090e;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            margin-top: 14px;
+        }
+
+        .timer-digits {
+            font-size: 32px;
+            font-weight: 800;
+            color: #38bdf8;
+            letter-spacing: 2px;
+            margin: 4px 0;
+        }
+
+        .timer-btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .timer-btn {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .timer-btn.start {
+            background: var(--primary);
+            color: #06090e;
+        }
+
+        .timer-btn.reset {
+            background: #1f2937;
+            color: #cbd5e1;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .footer-actions {
+            margin: 10px 0 30px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Screen 1: Auth -->
+    <main id="auth-screen" class="screen-container">
+        <div class="card">
+            <div class="header">
+                <span class="badge">সুস্থ শরীর • সঠিক বিজ্ঞান</span>
+                <h1 id="auth-title">লগইন করুন</h1>
+                <p id="auth-subtitle">আপনার সংরক্ষিত অ্যাকাউন্টে প্রবেশ করে ওয়ার্কআউট শুরু করুন।</p>
+            </div>
+
+            <div class="auth-toggle">
+                <button id="toggle-login" class="auth-toggle-btn active" type="button">লগইন</button>
+                <button id="toggle-signup" class="auth-toggle-btn" type="button">নতুন অ্যাকাউন্ট (Sign Up)</button>
+            </div>
+
+            <form id="auth-form">
+                <div class="input-group">
+                    <label for="email">ইমেইল এড্রেস</label>
+                    <input type="email" id="email" placeholder="name@example.com" value="user@fitness.com" required />
+                </div>
+
+                <div class="input-group">
+                    <label for="password">পাসওয়ার্ড</label>
+                    <input type="password" id="password" placeholder="কমপক্ষে ৬ অক্ষর" value="123456" required />
+                </div>
+
+                <div id="auth-error" class="auth-msg error"></div>
+
+                <button type="submit" id="auth-submit-btn" class="glow-button">লগইন করুন ➔</button>
+
+                <button type="button" id="guest-login-btn" class="btn-secondary"
+                    style="margin-top: 10px; font-size: 13px;">
+                    ⚡ সরাসরি ড্যাশবোর্ডে প্রবেশ করুন (Guest Mode)
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Screen 2: Onboarding -->
+    <main id="onboarding-screen" class="screen-container hidden">
+        <div class="card">
+            <div class="header">
+                <span class="badge">ধাপ ২ / ২</span>
+                <h2>শারীরিক তথ্য ও লক্ষ্য দিন</h2>
+                <p>সঠিক BMI ও ক্যালরি নির্ধারণ করতে ১০০% নির্ভুল তথ্য দিন।</p>
+            </div>
+
+            <form id="onboarding-form">
+                <div class="option-group">
+                    <label class="group-title">আপনার লিঙ্গ নির্বাচন করুন</label>
+                    <div class="radio-grid three-cols">
+                        <label class="custom-radio">
+                            <input type="radio" name="gender" value="male" checked />
+                            <div class="radio-box">ছেলে 👦</div>
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="gender" value="female" />
+                            <div class="radio-box">মেয়ে 👧</div>
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="gender" value="other" />
+                            <div class="radio-box">অন্যান্য 🌟</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="user-age">বয়স (বছর)</label>
+                        <input type="number" id="user-age" min="12" max="90" value="24" required />
+                    </div>
+                    <div class="input-group">
+                        <label for="user-weight">ওজন (কেজি)</label>
+                        <input type="number" id="user-weight" min="30" max="200" value="65" required />
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="user-height-feet">উচ্চতা (ফিট)</label>
+                        <input type="number" id="user-height-feet" min="3" max="7" value="5" required />
+                    </div>
+                    <div class="input-group">
+                        <label for="user-height-inch">ইঞ্চি</label>
+                        <input type="number" id="user-height-inch" min="0" max="11" value="7" required />
+                    </div>
+                </div>
+
+                <div id="bmi-display-box" class="bmi-feedback-card">
+                    <div>আপনার BMI স্কোর: <span id="bmi-score" class="bmi-val">22.5</span> (<span
+                            id="bmi-status">স্বাভাবিক</span>)</div>
+                    <div style="color: #94a3b8; font-size:12px; margin-top:4px;">
+                        উচ্চতা অনুযায়ী সুস্থ ওজন থাকা দরকার: <strong id="ideal-weight-range"
+                            style="color:var(--primary);">53.5 কেজি - 72.0 কেজি</strong>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <label class="group-title">কোথায় ব্যায়াম করতে চান?</label>
+                    <div class="radio-grid two-cols">
+                        <label class="custom-radio">
+                            <input type="radio" name="workoutPlace" value="home" checked />
+                            <div class="radio-box">
+                                <strong>বাসায় বসে 🏠</strong>
+                                <span>বিনা যন্ত্রপাতিতে</span>
+                            </div>
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="workoutPlace" value="gym" />
+                            <div class="radio-box">
+                                <strong>জিমে 🏋️‍♂️</strong>
+                                <span>ইকুইপমেন্ট ও মেশিন</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <label class="group-title">আপনার মূল লক্ষ্য কী?</label>
+                    <div class="radio-grid three-cols">
+                        <label class="custom-radio">
+                            <input type="radio" name="goal" value="loss" />
+                            <div class="radio-box">ওজন কমানো 📉</div>
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="goal" value="muscle" />
+                            <div class="radio-box">পেশি বাড়ানো 💪</div>
+                        </label>
+                        <label class="custom-radio">
+                            <input type="radio" name="goal" value="fit" checked />
+                            <div class="radio-box">ফিট থাকা 🏃</div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" id="save-profile-btn" class="glow-button">ড্যাশবোর্ডে প্রবেশ করুন ➔</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Screen 3: Dashboard -->
+    <main id="app-screen" class="dashboard-container hidden">
+        <header class="top-nav">
+            <div class="user-greeting">
+                <span id="user-profile-badge" class="badge">লোড হচ্ছে...</span>
+                <h2 id="user-welcome-name">আজকের ফিটনেস হাব</h2>
+            </div>
+            <div class="nav-actions">
+                <div class="theme-picker" title="নিয়ন কালার থিম নির্বাচন করুন">
+                    <div class="theme-dot theme-dot-emerald active" onclick="window.setTheme('emerald')"
+                        title="Emerald Green"></div>
+                    <div class="theme-dot theme-dot-cyan" onclick="window.setTheme('cyan')" title="Cyberpunk Cyan">
+                    </div>
+                    <div class="theme-dot theme-dot-gold" onclick="window.setTheme('gold')" title="Golden Neon"></div>
+                </div>
+                <div class="streak-badge">
+                    <span>🔥</span> <span id="streak-counter-text">১ দিনের স্ট্রিক</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ক্যালেন্ডার, দিন ও লাইভ ঘড়ি -->
+        <section class="calendar-clock-card">
+            <div class="calendar-info">
+                <div class="calendar-day-badge">
+                    <span>🗓️</span> <span id="current-day-text">আজকে...</span>
+                </div>
+                <span class="calendar-date">📅 <span id="current-date-text">--</span></span>
+            </div>
+            <div class="live-clock" id="live-clock-text">00:00:00</div>
+        </section>
+
+        <!-- BMI কার্ড -->
+        <section class="card" style="padding: 14px 18px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <span style="font-size:11px; color:#94a3b8;">বডি স্ট্যাটাস (BMI)</span>
+                    <div style="font-size:16px; font-weight:800; margin-top:2px;">
+                        <span id="dash-bmi-val" style="color:var(--primary);">--</span> • <span id="dash-bmi-status"
+                            style="font-size:13px; color:#ffffff;">--</span>
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <span style="font-size:11px; color:#94a3b8;">আদর্শ ওজন থাকা উচিত</span>
+                    <div id="dash-ideal-weight"
+                        style="font-size:14px; font-weight:700; color:var(--primary); margin-top:2px;">--</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="tab-switcher">
+            <button id="tab-workout-btn" class="tab-btn active">🏋️ Workout Hub</button>
+            <button id="tab-diet-btn" class="tab-btn">🥗 Diet & Calorie</button>
+        </div>
+
+        <!-- WORKOUT VIEW -->
+        <div id="workout-view" class="view-section">
+            <section class="card ring-card">
+                <div class="ring-wrapper">
+                    <svg class="progress-ring" width="100" height="100">
+                        <circle stroke="#1a2333" stroke-width="8" fill="transparent" r="42" cx="50" cy="50" />
+                        <circle id="progress-circle" class="ring-bar" stroke="#10b981" stroke-width="8"
+                            stroke-dasharray="264" stroke-dashoffset="264" stroke-linecap="round" fill="transparent"
+                            r="42" cx="50" cy="50" />
+                    </svg>
+                    <div class="ring-text">
+                        <span id="progress-number">0</span><span class="percent-sign">%</span>
+                    </div>
+                </div>
+                <div class="ring-description">
+                    <h3 id="progress-text-title">আজকের ১০০% টাস্ক অগ্রগতি</h3>
+                    <p id="progress-text-sub">প্রতিটি লক্ষ্য সম্পন্ন করে সার্কেল পূর্ণ করুন</p>
+                </div>
+            </section>
+
+            <!-- Water Tracker -->
+            <section class="card water-card">
+                <div class="water-header">
+                    <div>
+                        <h3 style="font-size:15px; font-weight:700;">💧 দৈনিক পানি পানের হিসাব</h3>
+                        <p style="font-size:11px; color:#94a3b8; margin-top:2px;">লক্ষ্য: ৮ গ্লাস (২ লিটার)</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <span id="water-count-text" style="font-size:15px; font-weight:800; color:#38bdf8;">০ / ৮
+                            গ্লাস</span>
+                    </div>
+                </div>
+                <div id="water-grid" class="water-glasses-grid"></div>
+            </section>
+
+            <!-- Daily Quests -->
+            <section class="card">
+                <div class="section-title">
+                    <h3>🎯 প্রতিদিনের লক্ষ্য (Daily Quests)</h3>
+                    <p>টাস্ক পূরণ করার সাথে সাথে অগ্রগতি রিং ও চার্ট স্কোর বাড়বে।</p>
+                </div>
+
+                <div class="task-list">
+                    <label class="task-item">
+                        <input type="checkbox" class="task-checkbox" data-index="0" />
+                        <div class="task-text">
+                            <strong>আজকের ব্যায়াম সম্পন্ন করা</strong>
+                            <small>নির্ধারিত রুটিন মেনে ওয়ার্কআউট শেষ করুন</small>
+                        </div>
+                    </label>
+                    <label class="task-item">
+                        <input type="checkbox" class="task-checkbox" data-index="1" />
+                        <div class="task-text">
+                            <strong>দৈনিক হাঁটা (৬,০০০+ কদম)</strong>
+                            <small>শরীর সক্রিয় ও সচল রাখুন</small>
+                        </div>
+                    </label>
+                    <label class="task-item">
+                        <input type="checkbox" class="task-checkbox" data-index="2" />
+                        <div class="task-text">
+                            <strong>পর্যাপ্ত ঘুম (৭-৮ ঘণ্টা)</strong>
+                            <small>পেশি রিকভারির জন্য গভীর বিশ্রাম</small>
+                        </div>
+                    </label>
+                    <label class="task-item">
+                        <input type="checkbox" class="task-checkbox" data-index="3" />
+                        <div class="task-text">
+                            <strong>নিয়মিত ৫ ওয়াক্তের সালাত আদায়</strong>
+                            <small>মানসিক প্রশান্তি ও আত্মিক সুস্থতা বজায় রাখুন</small>
+                        </div>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Exercise List -->
+            <section class="card">
+                <div class="section-title">
+                    <h3 id="workout-list-title">🏠 আজকের হোম রুটিন ও নির্দেশিকা</h3>
+                    <p>ব্যায়ামের ওপর ক্লিক করলে বিস্তারিত নিয়ম ও টাইমার খুলবে:</p>
+                </div>
+                <div id="exercise-container" class="exercise-grid"></div>
+            </section>
+        </div>
+
+        <!-- DIET VIEW -->
+        <div id="diet-view" class="view-section hidden">
+            <section class="card diet-dashboard-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <span class="badge">আজকের ক্যালরি অগ্রগতি</span>
+                        <h2 id="target-calorie-num"
+                            style="font-size:22px; font-weight:800; color:var(--primary); margin:4px 0;">-- kcal</h2>
+                        <p id="calorie-goal-note" style="font-size:12px; color:#94a3b8;">বৈজ্ঞানিক দৈনিক ক্যালরি বরাদ্দ
+                        </p>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <button id="reset-diet-btn" class="reset-btn" type="button" onclick="window.resetDiet()">
+                            <span class="spin-icon">🔄</span>
+                            <span>রিসেট</span>
+                        </button>
+                        <div style="font-size:30px;">🥗</div>
+                    </div>
+                </div>
+
+                <div class="diet-progress-bg">
+                    <div id="diet-progress-bar" class="diet-progress-fill"></div>
+                </div>
+
+                <div class="diet-stats-row">
+                    <div class="diet-stat-box">
+                        <span>খাওয়া হয়েছে</span>
+                        <strong id="consumed-calories-val" style="color:var(--primary-hover);">0 kcal</strong>
+                    </div>
+                    <div class="diet-stat-box">
+                        <span>বাকি আছে</span>
+                        <strong id="remaining-calories-val" style="color:var(--primary);">0 kcal</strong>
+                    </div>
+                    <div class="diet-stat-box">
+                        <span>মোট প্রোটিন</span>
+                        <strong id="consumed-protein-val" style="color:#38bdf8;">0g</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="section-title">
+                    <h3>🍛 দেশী খাবার ও ডায়েট লগ</h3>
+                    <p>কাস্টম খাবার যোগ করুন অথবা দেশী খাবার যোগ করুন:</p>
+                </div>
+
+                <div
+                    style="background: #06090e; border: 1px solid #1a2333; padding: 12px; border-radius: 12px; margin-bottom: 14px;">
+                    <span
+                        style="font-size: 12px; color: var(--primary); font-weight: 700; display: block; margin-bottom: 8px;">➕
+                        পছন্দের খাবার যোগ করুন</span>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <input type="text" id="custom-food-name" class="styled-input"
+                            placeholder="খাবারের নাম (যেমন: আপেল, রুটি-সবজি)" />
+                        <div style="display: flex; gap: 8px;">
+                            <input type="number" id="custom-food-cal" class="styled-input"
+                                placeholder="ক্যালরি (kcal)" />
+                            <input type="number" id="custom-food-pro" class="styled-input" placeholder="প্রোটিন (g)" />
+                        </div>
+                        <button type="button" onclick="window.addCustomFood()" class="glow-button"
+                            style="padding: 10px; font-size: 13px;">+ তালিকায় যুক্ত করুন</button>
+                    </div>
+                </div>
+
+                <div id="food-list-container" class="food-grid"></div>
+            </section>
+        </div>
+
+        <!-- সাপ্তাহিক টোটাল ১০০% চার্ট বোর্ড -->
+        <section class="card analytics-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <span class="badge">📊 সাপ্তাহিক রিপোর্ট বোর্ড</span>
+                    <h3 style="font-size:16px; font-weight:700; margin-top:4px;">প্রতিদিনের ১০০% সম্পন্ন হিসাব</h3>
+                </div>
+                <div style="text-align:right;">
+                    <span style="font-size:11px; color:#94a3b8;">আজকের অগ্রগতি</span>
+                    <div id="today-completion-badge" style="font-size:17px; font-weight:800; color:var(--primary);">0%
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-summary-bar">
+                <div>
+                    <span style="font-size:11px; color:#94a3b8; display:block;">সাপ্তাহিক গড় পারফরম্যান্স</span>
+                    <strong id="weekly-average-score" style="font-size:15px; color:#ffffff;">০%</strong>
+                </div>
+                <div style="font-size:12px; color:#94a3b8; text-align:right;">
+                    <span>🕛 প্রতিদিন রাত ১২টায় স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div id="analytics-svg-wrapper"></div>
+            </div>
+        </section>
+
+        <div class="footer-actions">
+            <button id="logout-btn" class="btn-secondary">লগআউট (নতুন ইউজার বা পরিবর্তন)</button>
+        </div>
+    </main>
+
+    <!-- Exercise Detail Popup Modal -->
+    <div id="exercise-modal" class="modal-backdrop hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="window.closeModal()">✕</button>
+
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+                <div id="modal-visual-box" class="exercise-visual-box" style="width:70px; height:70px; min-width:70px;">
+                </div>
+                <div>
+                    <h3 id="modal-exercise-name" style="font-size: 16px; font-weight: 700;">--</h3>
+                    <span id="modal-exercise-target"
+                        style="font-size: 12px; color: var(--primary); font-weight:600;">--</span>
+                </div>
+            </div>
+
+            <div
+                style="background: #06090e; border: 1px solid #1a2333; border-radius: 12px; padding: 12px; margin-bottom: 12px; text-align: center;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                    <span style="font-size: 11px; color: var(--primary); font-weight: 700;">🧬 টার্গেটেড মাসেল
+                        হাইলাইটার</span>
+                    <span id="modal-muscle-name-badge"
+                        style="font-size: 10px; background: var(--primary-bg); border:1px solid var(--primary); color: var(--primary); padding:2px 8px; border-radius: 10px;">--</span>
+                </div>
+                <div id="modal-muscle-map-svg"
+                    style="display:flex; justify-content:center; align-items:center; height: 110px;"></div>
+            </div>
+
+            <div
+                style="background: rgba(6, 9, 14, 0.7); border: 1px solid #1a2333; padding: 12px; border-radius: 10px;">
+                <span
+                    style="font-size: 12px; color: var(--primary-hover); font-weight: 700; display: block; margin-bottom: 6px;">📋
+                    সঠিক নিয়ম ও ধাপ:</span>
+                <ul id="modal-steps-list"
+                    style="font-size: 12px; color: #cbd5e1; padding-left: 18px; margin: 0; line-height: 1.6;"></ul>
+            </div>
+
+            <div class="timer-container">
+                <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">⏱️ ১ মিনিটের রেস্ট টাইমার</span>
+                <div id="timer-display" class="timer-digits">01:00</div>
+                <div class="timer-btn-row">
+                    <button id="timer-toggle-btn" class="timer-btn start" onclick="window.toggleTimer()">শুরু
+                        করুন</button>
+                    <button class="timer-btn reset" onclick="window.resetTimer()">রিসেট</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let isSignUp = false;
+            let activeUserEmail = null;
+
+            const authScreen = document.getElementById("auth-screen");
+            const onboardingScreen = document.getElementById("onboarding-screen");
+            const appScreen = document.getElementById("app-screen");
+            const authForm = document.getElementById("auth-form");
+            const authError = document.getElementById("auth-error");
+            const emailInput = document.getElementById("email");
+            const passwordInput = document.getElementById("password");
+            const toggleLoginBtn = document.getElementById("toggle-login");
+            const toggleSignupBtn = document.getElementById("toggle-signup");
+            const authTitle = document.getElementById("auth-title");
+            const authSubtitle = document.getElementById("auth-subtitle");
+            const authSubmitBtn = document.getElementById("auth-submit-btn");
+            const guestLoginBtn = document.getElementById("guest-login-btn");
+
+            const onboardingForm = document.getElementById("onboarding-form");
+            const logoutBtn = document.getElementById("logout-btn");
+
+            const ageInput = document.getElementById("user-age");
+            const weightInput = document.getElementById("user-weight");
+            const feetInput = document.getElementById("user-height-feet");
+            const inchInput = document.getElementById("user-height-inch");
+            const bmiScoreEl = document.getElementById("bmi-score");
+            const bmiStatusEl = document.getElementById("bmi-status");
+            const idealWeightRangeEl = document.getElementById("ideal-weight-range");
+
+            const userWelcomeName = document.getElementById("user-welcome-name");
+            const dashBmiVal = document.getElementById("dash-bmi-val");
+            const dashBmiStatus = document.getElementById("dash-bmi-status");
+            const dashIdealWeight = document.getElementById("dash-ideal-weight");
+            const userProfileBadge = document.getElementById("user-profile-badge");
+            const workoutListTitle = document.getElementById("workout-list-title");
+            const streakCounterText = document.getElementById("streak-counter-text");
+
+            const currentDateText = document.getElementById("current-date-text");
+            const currentDayText = document.getElementById("current-day-text");
+            const liveClockText = document.getElementById("live-clock-text");
+
+            const tabWorkoutBtn = document.getElementById("tab-workout-btn");
+            const tabDietBtn = document.getElementById("tab-diet-btn");
+            const workoutView = document.getElementById("workout-view");
+            const dietView = document.getElementById("diet-view");
+
+            const targetCalorieNum = document.getElementById("target-calorie-num");
+            const consumedCaloriesVal = document.getElementById("consumed-calories-val");
+            const remainingCaloriesVal = document.getElementById("remaining-calories-val");
+            const consumedProteinVal = document.getElementById("consumed-protein-val");
+            const dietProgressBar = document.getElementById("diet-progress-bar");
+            const foodListContainer = document.getElementById("food-list-container");
+            const exerciseContainer = document.getElementById("exercise-container");
+
+            const taskCheckboxes = document.querySelectorAll(".task-checkbox");
+            const progressCircle = document.getElementById("progress-circle");
+            const progressNumber = document.getElementById("progress-number");
+            const progressTextTitle = document.getElementById("progress-text-title");
+            const progressTextSub = document.getElementById("progress-text-sub");
+
+            const waterGrid = document.getElementById("water-grid");
+            const waterCountText = document.getElementById("water-count-text");
+
+            const exerciseModal = document.getElementById("exercise-modal");
+            const modalVisualBox = document.getElementById("modal-visual-box");
+            const modalExerciseName = document.getElementById("modal-exercise-name");
+            const modalExerciseTarget = document.getElementById("modal-exercise-target");
+            const modalMuscleNameBadge = document.getElementById("modal-muscle-name-badge");
+            const modalMuscleMapSvg = document.getElementById("modal-muscle-map-svg");
+            const modalStepsList = document.getElementById("modal-steps-list");
+            const timerDisplay = document.getElementById("timer-display");
+            const timerToggleBtn = document.getElementById("timer-toggle-btn");
+
+            const todayCompletionBadge = document.getElementById("today-completion-badge");
+            const weeklyAverageScore = document.getElementById("weekly-average-score");
+            const analyticsSvgWrapper = document.getElementById("analytics-svg-wrapper");
+
+            let currentCalories = 0;
+            let currentProtein = 0;
+            let userWaterGlasses = 0;
+            let questsChecked = [false, false, false, false];
+            let userStreak = 1;
+            let weeklyHistoryScores = [];
+
+            let timerInterval = null;
+            let timeLeft = 60;
+            let isTimerRunning = false;
+            window.currentModalExerciseIndex = null;
+
+            // অথেনটিকেশন টগল লিসেনার
+            toggleLoginBtn.addEventListener("click", () => {
+                isSignUp = false;
+                toggleLoginBtn.classList.add("active");
+                toggleSignupBtn.classList.remove("active");
+                authTitle.textContent = "লগইন করুন";
+                authSubtitle.textContent = "আপনার সংরক্ষিত অ্যাকাউন্টে প্রবেশ করে ওয়ার্কআউট শুরু করুন।";
+                authSubmitBtn.textContent = "লগইন করুন ➔";
+                authError.style.display = "none";
+            });
+
+            toggleSignupBtn.addEventListener("click", () => {
+                isSignUp = true;
+                toggleSignupBtn.classList.add("active");
+                toggleLoginBtn.classList.remove("active");
+                authTitle.textContent = "নতুন অ্যাকাউন্ট তৈরি করুন";
+                authSubtitle.textContent = "আপনার নিজস্ব ইমেইল ও পাসওয়ার্ড দিয়ে রেজিস্ট্রেশন সম্পন্ন করুন।";
+                authSubmitBtn.textContent = "অ্যাকাউন্ট খুলুন ➔";
+                authError.style.display = "none";
+            });
+
+            // থিম পরিবর্তন
+            window.setTheme = function (themeName) {
+                document.documentElement.setAttribute('data-theme', themeName);
+                localStorage.setItem('app_neon_theme', themeName);
+
+                document.querySelectorAll('.theme-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                });
+
+                if (themeName === 'cyan') {
+                    document.querySelector('.theme-dot-cyan')?.classList.add('active');
+                } else if (themeName === 'gold') {
+                    document.querySelector('.theme-dot-gold')?.classList.add('active');
+                } else {
+                    document.querySelector('.theme-dot-emerald')?.classList.add('active');
+                }
+
+                renderWeekly100Chart();
+            };
+
+            const savedTheme = localStorage.getItem('app_neon_theme') || 'emerald';
+            window.setTheme(savedTheme);
+
+            function updateCalendarAndClock() {
+                const now = new Date();
+                const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+                const dayOptions = { weekday: 'long' };
+
+                currentDateText.textContent = now.toLocaleDateString('bn-BD', dateOptions);
+                currentDayText.textContent = now.toLocaleDateString('bn-BD', dayOptions);
+
+                let hours = now.getHours();
+                let minutes = now.getMinutes();
+                let seconds = now.getSeconds();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12;
+
+                liveClockText.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${ampm}`;
+
+                if (hours === 12 && minutes === 0 && seconds === 0 && ampm === 'AM') {
+                    handleMidnightChartReset();
+                }
+            }
+            setInterval(updateCalendarAndClock, 1000);
+            updateCalendarAndClock();
+
+            const illustrations3D = {
+                pushups: `
+          <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+            <defs>
+              <linearGradient id="mat1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#15803d"/><stop offset="100%" stop-color="#14532d"/></linearGradient>
+            </defs>
+            <polygon points="12,74 88,74 96,82 4,82" fill="url(#mat1)" stroke="#22c55e" stroke-width="0.8" opacity="0.9" />
+            <circle cx="28" cy="46" r="8" fill="#fbcfe8" />
+            <path d="M22,44 C22,40 26,38 32,40 C36,41 37,45 35,49 C33,48 29,46 22,44 Z" fill="#1e293b" />
+            <path d="M34,48 L58,54 L52,64 L30,56 Z" fill="#1e3a8a" />
+            <path d="M56,54 L76,58 L72,66 L52,64 Z" fill="#4ade80" />
+            <path d="M74,58 L86,64 L82,68 L70,64 Z" fill="#fbcfe8" />
+            <path d="M84,65 L92,67 L88,72 L82,69 Z" fill="#38bdf8" />
+            <path d="M35,52 L34,74 L30,74 L30,56 Z" fill="#fbcfe8" />
+            <path d="M42,54 L44,74 L40,74 L38,56 Z" fill="#fbcfe8" />
+          </svg>
+        `,
+                situps: `
+          <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+            <defs>
+              <linearGradient id="mat2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#1e293b"/></linearGradient>
+            </defs>
+            <polygon points="10,76 86,76 94,84 2,84" fill="url(#mat2)" stroke="#64748b" stroke-width="0.8" />
+            <circle cx="68" cy="42" r="8" fill="#fbcfe8" />
+            <path d="M62,40 C63,36 67,34 73,36 C77,38 78,42 75,46 C73,44 68,42 62,40 Z" fill="#1e293b" />
+            <path d="M64,48 L46,62 L40,56 L58,44 Z" fill="#1e3a8a" />
+            <path d="M46,62 L32,56 L24,72 L36,74 Z" fill="#4ade80" />
+            <path d="M30,58 L20,74 L28,78 L38,62 Z" fill="#fbcfe8" />
+            <path d="M20,74 L14,77 L18,82 L26,79 Z" fill="#38bdf8" />
+            <path d="M63,44 L70,36 L74,40 L66,48 Z" fill="#fbcfe8" />
+          </svg>
+        `,
+                squats: `
+          <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+            <line x1="8" y1="46" x2="92" y2="46" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+            <rect x="12" y="38" width="6" height="16" rx="2" fill="#1e293b" stroke="#0ea5e9" stroke-width="0.8" />
+            <rect x="82" y="38" width="6" height="16" rx="2" fill="#1e293b" stroke="#0ea5e9" stroke-width="0.8" />
+            <circle cx="50" cy="30" r="8" fill="#fbcfe8" />
+            <path d="M43,28 C44,24 48,22 55,23 C59,25 60,29 57,33 C54,32 49,30 43,28 Z" fill="#1e293b" />
+            <path d="M44,38 L56,38 L54,58 L46,58 Z" fill="#1e3a8a" />
+            <path d="M46,56 L34,64 L40,70 L48,60 Z" fill="#4ade80" />
+            <path d="M54,56 L66,64 L60,70 L52,60 Z" fill="#4ade80" />
+            <path d="M36,66 L34,78 L40,78 L42,68 Z" fill="#fbcfe8" />
+            <path d="M64,66 L66,78 L60,78 L58,68 Z" fill="#fbcfe8" />
+            <ellipse cx="36" cy="80" rx="5" ry="2" fill="#38bdf8" />
+            <ellipse cx="64" cy="80" rx="5" ry="2" fill="#38bdf8" />
+            <path d="M44,42 L36,46 L38,50 L46,45 Z" fill="#fbcfe8" />
+            <path d="M56,42 L64,46 L62,50 L54,45 Z" fill="#fbcfe8" />
+          </svg>
+        `,
+                planks: `
+          <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+            <defs>
+              <linearGradient id="mat3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#1e3a8a"/></linearGradient>
+            </defs>
+            <polygon points="12,74 88,74 96,82 4,82" fill="url(#mat3)" stroke="#60a5fa" stroke-width="0.8" opacity="0.9" />
+            <circle cx="28" cy="48" r="8" fill="#fbcfe8" />
+            <path d="M22,46 C22,42 26,40 32,42 C36,43 37,47 35,51 C33,50 29,48 22,46 Z" fill="#1e293b" />
+            <path d="M34,50 L58,54 L52,64 L30,58 Z" fill="#1e3a8a" />
+            <path d="M56,54 L76,57 L72,65 L52,64 Z" fill="#4ade80" />
+            <path d="M74,57 L86,63 L82,67 L70,63 Z" fill="#fbcfe8" />
+            <path d="M84,64 L92,66 L88,71 L82,68 Z" fill="#38bdf8" />
+            <path d="M34,54 L36,68 L44,72 L42,74 L32,70 L30,56 Z" fill="#fbcfe8" />
+          </svg>
+        `
+            };
+
+            function generateNeonBodyMap(activeGroup) {
+                const isChest = activeGroup === 'chest';
+                const isAbs = activeGroup === 'abs';
+                const isLegs = activeGroup === 'legs';
+                const isCore = activeGroup === 'core';
+
+                return `
+          <svg viewBox="0 0 100 140" style="height:100%;">
+            <g stroke="#1e293b" stroke-width="1.5" fill="none">
+              <circle cx="50" cy="18" r="10" stroke="#334155" />
+              <path d="M34,36 L18,60 L24,84" />
+              <path d="M66,36 L82,60 L76,84" />
+              <path d="M34,36 L66,36 L60,82 L40,82 Z" />
+              <path d="M42,82 L38,110 L36,134" />
+              <path d="M58,82 L62,110 L64,134" />
+            </g>
+
+            <path d="M37,40 Q50,46 63,40 Q58,54 50,56 Q42,54 37,40 Z" 
+                  fill="${isChest ? 'var(--primary)' : 'none'}" 
+                  stroke="${isChest ? 'var(--primary-hover)' : '#1e293b'}" 
+                  stroke-width="${isChest ? '2.5' : '1'}" 
+                  class="${isChest ? 'pulsing-muscle' : ''}" />
+
+            <g class="${(isAbs || isCore) ? 'pulsing-muscle' : ''}">
+              <rect x="44" y="58" width="12" height="6" rx="2" fill="${(isAbs || isCore) ? 'var(--primary)' : 'none'}" stroke="${(isAbs || isCore) ? 'var(--primary-hover)' : '#1e293b'}" stroke-width="${(isAbs || isCore) ? '2' : '1'}" />
+              <rect x="44" y="66" width="12" height="6" rx="2" fill="${(isAbs || isCore) ? 'var(--primary)' : 'none'}" stroke="${(isAbs || isCore) ? 'var(--primary-hover)' : '#1e293b'}" stroke-width="${(isAbs || isCore) ? '2' : '1'}" />
+              <rect x="44" y="74" width="12" height="6" rx="2" fill="${(isAbs || isCore) ? 'var(--primary)' : 'none'}" stroke="${(isAbs || isCore) ? 'var(--primary-hover)' : '#1e293b'}" stroke-width="${(isAbs || isCore) ? '2' : '1'}" />
+            </g>
+
+            <g class="${isLegs ? 'pulsing-muscle' : ''}">
+              <path d="M38,84 Q34,98 36,108 Q44,106 46,84 Z" fill="${isLegs ? 'var(--primary)' : 'none'}" stroke="${isLegs ? 'var(--primary-hover)' : '#1e293b'}" stroke-width="${isLegs ? '2' : '1'}" />
+              <path d="M62,84 Q66,98 64,108 Q56,106 54,84 Z" fill="${isLegs ? 'var(--primary)' : 'none'}" stroke="${isLegs ? 'var(--primary-hover)' : '#1e293b'}" stroke-width="${isLegs ? '2' : '1'}" />
+            </g>
+          </svg>
+        `;
+            }
+
+            const exercises = [
+                {
+                    name: "Push-ups (বুকডন)",
+                    target: "Chest, Triceps & Front Deltoids",
+                    muscleGroup: "chest",
+                    muscleBadge: "বুক ও ট্রাইসেপ্স পালসিং",
+                    glowClass: "glow-orange",
+                    reps: "৩ সেট • ১২-১৫ বার",
+                    svg: illustrations3D.pushups,
+                    steps: [
+                        "হাত দুটি কাঁধ বরাবর সোজা মাটিতে রাখুন এবং পুরো শরীরকে মাথা থেকে গোড়ালি পর্যন্ত এক লাইনে সোজা রাখুন।",
+                        "কনুই ৪৫ ডিগ্রি কোণে বাঁকিয়ে বুক মাটি স্পর্শ করার কাছাকাছি পর্যন্ত নামান।",
+                        "বুকে চাপ দিয়ে নিঃশ্বাস ছাড়তে ছাড়তে আগের পজিশনে উঠে আসুন। কোমর ঝুলিয়ে দেবেন না।"
+                    ]
+                },
+                {
+                    name: "Sit-ups (সিট-আপস)",
+                    target: "Abdominals & Core Muscles",
+                    muscleGroup: "abs",
+                    muscleBadge: "অ্যাবডোমিনাল কোর পালসিং",
+                    glowClass: "glow-purple",
+                    reps: "৩ সেট • ১৫-২০ বার",
+                    svg: illustrations3D.situps,
+                    steps: [
+                        "ম্যাটে পিঠ সোজা রেখে শুয়ে হাঁটু ভাঁজ করুন এবং পায়ের পাতা মাটিতে শক্ত করে রাখুন।",
+                        "হাত দুটি মাথার পেছনে বা বুকের ওপর আড়াআড়ি রাখুন (ঘাড় ধরে টানবেন না)।",
+                        "পেটের মাংসপেশিতে চাপ দিয়ে শরীরের ওপরের অংশ হাঁটু বরাবর তুলে আনুন এবং ধীরে ধীরে নামুন।"
+                    ]
+                },
+                {
+                    name: "Squats (স্কোয়াট)",
+                    target: "Quads, Hamstrings & Glutes",
+                    muscleGroup: "legs",
+                    muscleBadge: "উরু ও গ্লুটস পালসিং",
+                    glowClass: "glow-purple",
+                    reps: "৪ সেট • ১৫ বার",
+                    svg: illustrations3D.squats,
+                    steps: [
+                        "পা দুটি কাঁধ বরাবর ফাঁক করে সোজা হয়ে দাঁড়ান এবং বারবেল বা হাত সামনে রাখুন।",
+                        "চেয়ারে বসার ভঙ্গিতে কোমর পেছনে ঠেলে উরু মাটির সমান্তরাল হওয়া পর্যন্ত নামুন।",
+                        "হাঁটু যেন বুড়ো আঙুল ছাড়িয়ে সামনে না যায়। গোড়ালিতে ভর দিয়ে সোজা হয়ে উঠুন।"
+                    ]
+                },
+                {
+                    name: "Planks (প্ল্যাঙ্ক)",
+                    target: "Core Stability & Lower Back",
+                    muscleGroup: "core",
+                    muscleBadge: "সম্পূর্ণ কোর স্ট্যাবিলিটি পালসিং",
+                    glowClass: "glow-orange",
+                    reps: "৩ সেট • ৪০-৬০ সেকেন্ড",
+                    svg: illustrations3D.planks,
+                    steps: [
+                        "কনুই দুটি মাটিতে কাঁধের নিচে রাখুন এবং পায়ের আঙুলের ওপর ভর দিয়ে শরীর একদম সোজা রাখুন।",
+                        "পেটের পেশি ভেতরের দিকে টেনে টাইট করে রাখুন এবং স্বাভাবিকভাবে শ্বাস-প্রশ্বাস নিন।",
+                        "কোমর বেশি ওপরে তোলা বা মেঝেতে ফেলে দেওয়া যাবে না।"
+                    ]
+                }
+            ];
+
+            let defaultFoods = [
+                { id: "egg", name: "সিদ্ধ ডিম (Boiled Egg)", serving: "১টি", calories: 78, protein: 6.3 },
+                { id: "rice_dal", name: "ভাত ও মসুর ডাল", serving: "১ প্লেট", calories: 350, protein: 9 },
+                { id: "chicken", name: "মুরগির মাংস", serving: "১৫০ গ্রাম", calories: 240, protein: 27 },
+                { id: "roti", name: "লাল আটার রুটি", serving: "২টি", calories: 160, protein: 6 },
+                { id: "banana", name: "কলা", serving: "১টি", calories: 105, protein: 1.3 }
+            ];
+
+            function getUsers() {
+                return JSON.parse(localStorage.getItem("app_registered_users") || "{}");
+            }
+
+            function saveUsers(users) {
+                localStorage.setItem("app_registered_users", JSON.stringify(users));
+            }
+
+            function calculateTodayOverall100() {
+                let questCount = 0;
+                questsChecked.forEach(q => { if (q) questCount++; });
+                const questPct = (questCount / 4) * 50;
+                const waterPct = Math.min((userWaterGlasses / 8), 1) * 30;
+                const calTarget = 2000;
+                const calPct = Math.min((currentCalories / calTarget), 1) * 20;
+
+                return Math.min(Math.round(questPct + waterPct + calPct), 100);
+            }
+
+            function saveDailyTrackerData() {
+                if (!activeUserEmail) return;
+                const todayStr = new Date().toISOString().split("T")[0];
+                const trackerData = {
+                    date: todayStr,
+                    currentCalories,
+                    currentProtein,
+                    userWaterGlasses,
+                    questsChecked,
+                    userStreak,
+                    foods: defaultFoods,
+                    weeklyHistoryScores
+                };
+                localStorage.setItem(`tracker_${activeUserEmail}`, JSON.stringify(trackerData));
+            }
+
+            function handleMidnightChartReset() {
+                if (!activeUserEmail) return;
+                const dayNames = ["রবি", "সোম", "মঙ্গল", "বুধ", "বৃহঃ", "শুক্র", "শনি"];
+                const yesterdayIdx = (new Date().getDay() + 6) % 7;
+                const yesterdayDay = dayNames[yesterdayIdx];
+
+                const finishedScore = calculateTodayOverall100();
+
+                if (weeklyHistoryScores.length >= 7) {
+                    weeklyHistoryScores.shift();
+                }
+                weeklyHistoryScores.push({
+                    day: yesterdayDay,
+                    score: finishedScore
+                });
+
+                currentCalories = 0;
+                currentProtein = 0;
+                userWaterGlasses = 0;
+                questsChecked = [false, false, false, false];
+                userStreak += 1;
+
+                saveDailyTrackerData();
+                location.reload();
+            }
+
+            function loadAndCheckMidnightReset() {
+                if (!activeUserEmail) return;
+                const todayStr = new Date().toISOString().split("T")[0];
+                const saved = localStorage.getItem(`tracker_${activeUserEmail}`);
+
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    weeklyHistoryScores = data.weeklyHistoryScores || [];
+                    if (data.date === todayStr) {
+                        currentCalories = data.currentCalories || 0;
+                        currentProtein = data.currentProtein || 0;
+                        userWaterGlasses = data.userWaterGlasses || 0;
+                        questsChecked = data.questsChecked || [false, false, false, false];
+                        userStreak = data.userStreak || 1;
+                        if (data.foods && data.foods.length) defaultFoods = data.foods;
+                    } else {
+                        const dayNames = ["রবি", "সোম", "মঙ্গল", "বুধ", "বৃহঃ", "শুক্র", "শনি"];
+                        const prevDayName = dayNames[(new Date(data.date).getDay()) % 7] || "পূর্বদিন";
+
+                        let prevQuests = 0;
+                        (data.questsChecked || []).forEach(q => { if (q) prevQuests++; });
+                        const prevScore = Math.min(Math.round(((prevQuests / 4) * 50) + (Math.min((data.userWaterGlasses || 0) / 8, 1) * 30) + (Math.min((data.currentCalories || 0) / 2000, 1) * 20)), 100);
+
+                        if (weeklyHistoryScores.length >= 7) {
+                            weeklyHistoryScores.shift();
+                        }
+                        weeklyHistoryScores.push({
+                            day: prevDayName,
+                            score: prevScore > 0 ? prevScore : 75
+                        });
+
+                        currentCalories = 0;
+                        currentProtein = 0;
+                        userWaterGlasses = 0;
+                        questsChecked = [false, false, false, false];
+                        userStreak = (data.userStreak || 1) + 1;
+                        if (data.foods && data.foods.length) defaultFoods = data.foods;
+                        saveDailyTrackerData();
+                    }
+                } else {
+                    userStreak = 1;
+                    weeklyHistoryScores = [
+                        { day: "শনি", score: 85 },
+                        { day: "রবি", score: 90 },
+                        { day: "সোম", score: 70 },
+                        { day: "মঙ্গল", score: 100 },
+                        { day: "বুধ", score: 80 },
+                        { day: "বৃহঃ", score: 95 }
+                    ];
+                    saveDailyTrackerData();
+                }
+            }
+
+            guestLoginBtn.addEventListener("click", () => {
+                const guestEmail = "guest@fitness.com";
+                const users = getUsers();
+                if (!users[guestEmail]) {
+                    users[guestEmail] = {
+                        password: "guest",
+                        profile: {
+                            email: guestEmail,
+                            gender: "male",
+                            workoutPlace: "home",
+                            goal: "fit",
+                            age: 24,
+                            bmi: "22.5",
+                            bmiStatus: "স্বাভাবিক",
+                            minIdeal: "53.5",
+                            maxIdeal: "72.0",
+                            targetCalories: 2000,
+                            currentWeight: 65,
+                            heightMeters: 1.7
+                        }
+                    };
+                    saveUsers(users);
+                }
+                activeUserEmail = guestEmail;
+                localStorage.setItem("active_user_session", guestEmail);
+                loadAndCheckMidnightReset();
+                showDashboard(users[guestEmail].profile);
+            });
+
+            authForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                authError.style.display = "none";
+
+                const email = emailInput.value.trim().toLowerCase();
+                const password = passwordInput.value;
+                const users = getUsers();
+
+                if (isSignUp) {
+                    if (users[email]) {
+                        authError.textContent = "এই ইমেইল দিয়ে আগেই অ্যাকাউন্ট খোলা হয়েছে! দয়া করে লগইন করুন।";
+                        authError.style.display = "block";
+                        return;
+                    }
+                    users[email] = { password: password, profile: null };
+                    saveUsers(users);
+                    activeUserEmail = email;
+                    localStorage.setItem("active_user_session", email);
+
+                    authScreen.classList.add("hidden");
+                    onboardingScreen.classList.remove("hidden");
+                    updateBMI();
+                } else {
+                    if (!users[email]) {
+                        users[email] = { password: password, profile: null };
+                        saveUsers(users);
+                        activeUserEmail = email;
+                        localStorage.setItem("active_user_session", email);
+                        authScreen.classList.add("hidden");
+                        onboardingScreen.classList.remove("hidden");
+                        updateBMI();
+                        return;
+                    }
+                    if (users[email].password !== password) {
+                        authError.textContent = "ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড দিন।";
+                        authError.style.display = "block";
+                        return;
+                    }
+
+                    activeUserEmail = email;
+                    localStorage.setItem("active_user_session", email);
+
+                    if (users[email].profile) {
+                        loadAndCheckMidnightReset();
+                        showDashboard(users[email].profile);
+                    } else {
+                        authScreen.classList.add("hidden");
+                        onboardingScreen.classList.remove("hidden");
+                        updateBMI();
+                    }
+                }
+            });
+
+            function updateBMI() {
+                const weight = parseFloat(weightInput.value) || 60;
+                const feet = parseFloat(feetInput.value) || 5;
+                const inch = parseFloat(inchInput.value) || 6;
+                const totalInches = (feet * 12) + inch;
+                const heightMeters = totalInches * 0.0254;
+
+                const bmi = (weight / (heightMeters * heightMeters)).toFixed(1);
+                const minIdeal = (18.5 * heightMeters * heightMeters).toFixed(1);
+                const maxIdeal = (24.9 * heightMeters * heightMeters).toFixed(1);
+
+                let status = bmi < 18.5 ? "ওজন কম" : bmi <= 24.9 ? "স্বাভাবিক" : "অতিরিক্ত ওজন";
+
+                bmiScoreEl.textContent = bmi;
+                bmiStatusEl.textContent = status;
+                idealWeightRangeEl.textContent = `${minIdeal} কেজি - ${maxIdeal} কেজি`;
+
+                return { bmi, status, minIdeal, maxIdeal, heightMeters, weight };
+            }
+
+            [weightInput, feetInput, inchInput].forEach(inp => inp.addEventListener("input", updateBMI));
+
+            onboardingForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const bmiData = updateBMI();
+                const age = parseInt(ageInput.value) || 24;
+                const gender = onboardingForm.gender.value;
+                const workoutPlace = onboardingForm.workoutPlace.value;
+                const goal = onboardingForm.goal.value;
+
+                const heightCm = bmiData.heightMeters * 100;
+                let bmr = (10 * bmiData.weight) + (6.25 * heightCm) - (5 * age);
+                bmr = (gender === "female") ? (bmr - 161) : (bmr + 5);
+                let targetCal = Math.round(bmr * 1.375);
+                if (goal === "loss") targetCal -= 500;
+                if (goal === "muscle") targetCal += 350;
+
+                const profile = {
+                    email: activeUserEmail,
+                    gender, workoutPlace, goal, age,
+                    bmi: bmiData.bmi, bmiStatus: bmiData.status,
+                    minIdeal: bmiData.minIdeal, maxIdeal: bmiData.maxIdeal,
+                    targetCalories: targetCal,
+                    currentWeight: bmiData.weight,
+                    heightMeters: bmiData.heightMeters
+                };
+
+                const users = getUsers();
+                if (users[activeUserEmail]) {
+                    users[activeUserEmail].profile = profile;
+                    saveUsers(users);
+                }
+
+                loadAndCheckMidnightReset();
+                showDashboard(profile);
+            });
+
+            function showDashboard(profile) {
+                authScreen.classList.add("hidden");
+                onboardingScreen.classList.add("hidden");
+                appScreen.classList.remove("hidden");
+
+                const genderLabel = profile.gender === "male" ? "ছেলে" : "মেয়ে";
+                const placeLabel = profile.workoutPlace === "home" ? "হোম ওয়ার্কআউট" : "জিম ওয়ার্কআউট";
+                userProfileBadge.textContent = `${genderLabel} • ${placeLabel}`;
+                userWelcomeName.textContent = profile.email.split('@')[0] + "-এর ফিটনেস হাব";
+                workoutListTitle.textContent = profile.workoutPlace === "home" ? "🏠 আজকের হোম রুটিন ও নির্দেশিকা" : "🏋️ আজকের জিম রুটিন ও নির্দেশিকা";
+                streakCounterText.textContent = `${userStreak} দিনের স্ট্রিক`;
+
+                dashBmiVal.textContent = profile.bmi;
+                dashBmiStatus.textContent = profile.bmiStatus;
+                dashIdealWeight.textContent = `${profile.minIdeal} - ${profile.maxIdeal} কেজি`;
+                targetCalorieNum.textContent = `${profile.targetCalories} kcal`;
+
+                taskCheckboxes.forEach((cb, idx) => {
+                    cb.checked = !!questsChecked[idx];
+                });
+                updateQuestsProgress();
+
+                renderWaterTracker();
+                renderExercises();
+                renderFoods(profile.targetCalories);
+                renderWeekly100Chart();
+            }
+
+            function renderWaterTracker() {
+                waterGrid.innerHTML = "";
+                for (let i = 1; i <= 8; i++) {
+                    const isDrank = i <= userWaterGlasses;
+                    const glassBtn = document.createElement("button");
+                    glassBtn.type = "button";
+                    glassBtn.className = `water-glass-btn ${isDrank ? "drank" : ""}`;
+                    glassBtn.innerHTML = `
+            <span class="water-glass-icon">${isDrank ? "🥛" : "🫙"}</span>
+            <span class="water-glass-label">${i}ম গ্লাস</span>
+          `;
+                    glassBtn.onclick = () => {
+                        if (userWaterGlasses === i) {
+                            userWaterGlasses = i - 1;
+                        } else {
+                            userWaterGlasses = i;
+                        }
+                        updateWaterUI();
+                        saveDailyTrackerData();
+                        updateDailyOverallScore();
+                    };
+                    waterGrid.appendChild(glassBtn);
+                }
+                updateWaterUI();
+            }
+
+            function updateWaterUI() {
+                waterCountText.textContent = `${userWaterGlasses} / ৮ গ্লাস`;
+                const buttons = waterGrid.querySelectorAll(".water-glass-btn");
+                buttons.forEach((btn, idx) => {
+                    if (idx < userWaterGlasses) {
+                        btn.classList.add("drank");
+                        btn.querySelector(".water-glass-icon").textContent = "🥛";
+                    } else {
+                        btn.classList.remove("drank");
+                        btn.querySelector(".water-glass-icon").textContent = "🫙";
+                    }
+                });
+
+                if (userWaterGlasses === 8) {
+                    const activeTheme = document.documentElement.getAttribute('data-theme');
+                    let confettiColor = ['#10b981', '#34d399', '#ffffff'];
+                    if (activeTheme === 'cyan') confettiColor = ['#06b6d4', '#22d3ee', '#ffffff'];
+                    if (activeTheme === 'gold') confettiColor = ['#f59e0b', '#fbbf24', '#ffffff'];
+
+                    confetti({
+                        particleCount: 50,
+                        spread: 60,
+                        origin: { y: 0.7 },
+                        colors: confettiColor
+                    });
+                }
+            }
+
+            function renderExercises() {
+                exerciseContainer.innerHTML = exercises.map((ex, index) => `
+          <div class="exercise-card" onclick="window.openModal(${index})">
+            <div class="exercise-visual-box ${ex.glowClass}">${ex.svg}</div>
+            <div class="exercise-info">
+              <strong>${ex.name}</strong>
+              <span class="target-muscle">🎯 পেশি: ${ex.target}</span>
+            </div>
+            <span class="exercise-badge">${ex.reps}</span>
+          </div>
+        `).join("");
+            }
+
+            window.openModal = function (index) {
+                window.currentModalExerciseIndex = index;
+                const ex = exercises[index];
+                modalVisualBox.innerHTML = ex.svg;
+                modalVisualBox.className = `exercise-visual-box ${ex.glowClass}`;
+                modalExerciseName.textContent = ex.name;
+                modalExerciseTarget.textContent = "🎯 টার্গেটেড পেশি: " + ex.target;
+                modalMuscleNameBadge.textContent = ex.muscleBadge;
+
+                modalMuscleMapSvg.innerHTML = generateNeonBodyMap(ex.muscleGroup);
+
+                modalStepsList.innerHTML = ex.steps.map(s => `<li>${s}</li>`).join("");
+                window.resetTimer();
+                exerciseModal.classList.remove("hidden");
+            };
+
+            window.closeModal = function () {
+                exerciseModal.classList.add("hidden");
+                window.currentModalExerciseIndex = null;
+                window.resetTimer();
+            };
+
+            window.toggleTimer = function () {
+                if (isTimerRunning) {
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    timerToggleBtn.textContent = "চালু রাখুন";
+                    timerToggleBtn.style.background = "var(--primary)";
+                } else {
+                    isTimerRunning = true;
+                    timerToggleBtn.textContent = "পজ করুন";
+                    timerToggleBtn.style.background = "#f59e0b";
+                    timerInterval = setInterval(() => {
+                        if (timeLeft > 0) {
+                            timeLeft--;
+                            updateTimerDisplay();
+                        } else {
+                            clearInterval(timerInterval);
+                            isTimerRunning = false;
+                            timerToggleBtn.textContent = "সম্পন্ন 🎉";
+                            timerToggleBtn.style.background = "var(--primary)";
+                            confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
+                        }
+                    }, 1000);
+                }
+            };
+
+            window.resetTimer = function () {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                timeLeft = 60;
+                updateTimerDisplay();
+                timerToggleBtn.textContent = "শুরু করুন";
+                timerToggleBtn.style.background = "var(--primary)";
+            };
+
+            function updateTimerDisplay() {
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                timerDisplay.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+
+            function renderFoods(targetCal) {
+                foodListContainer.innerHTML = defaultFoods.map((f, index) => `
+          <div class="food-card">
+            <div class="food-meta">
+              <strong>${f.name}</strong>
+              <span>${f.serving} • প্রোটিন: ${f.protein}g</span>
+            </div>
+            <div class="food-action">
+              <span class="food-badge">${f.calories} kcal</span>
+              <button class="add-food-btn" onclick="window.addFood(${f.calories}, ${f.protein}, ${targetCal})">+ যোগ করুন</button>
+              <button class="delete-food-btn" type="button" onclick="window.removeFood(${index})" title="তালিকা থেকে সরান">🗑️</button>
+            </div>
+          </div>
+        `).join("");
+                updateDietUI(targetCal);
+            }
+
+            window.removeFood = function (index) {
+                defaultFoods.splice(index, 1);
+                saveDailyTrackerData();
+                const targetText = document.getElementById("target-calorie-num").innerText;
+                const targetCal = parseInt(targetText) || 2000;
+                renderFoods(targetCal);
+            };
+
+            window.addFood = function (cal, pro, targetCal) {
+                currentCalories += cal;
+                currentProtein = parseFloat((currentProtein + pro).toFixed(1));
+                updateDietUI(targetCal);
+                saveDailyTrackerData();
+                updateDailyOverallScore();
+            };
+
+            window.addCustomFood = function () {
+                const nameInput = document.getElementById("custom-food-name");
+                const calInput = document.getElementById("custom-food-cal");
+                const proInput = document.getElementById("custom-food-pro");
+
+                const name = nameInput.value.trim();
+                const cal = parseFloat(calInput.value);
+                const pro = parseFloat(proInput.value) || 0;
+
+                if (!name || isNaN(cal) || cal <= 0) {
+                    alert("দয়া করে খাবারের নাম এবং সঠিক ক্যালরি লিখুন!");
+                    return;
+                }
+
+                defaultFoods.unshift({
+                    id: "custom_" + Date.now(),
+                    name: name,
+                    serving: "১ পরিবেশন",
+                    calories: Math.round(cal),
+                    protein: pro
+                });
+
+                nameInput.value = "";
+                calInput.value = "";
+                proInput.value = "";
+
+                saveDailyTrackerData();
+                const targetText = document.getElementById("target-calorie-num").innerText;
+                const targetCal = parseInt(targetText) || 2000;
+                renderFoods(targetCal);
+            };
+
+            window.resetDiet = function () {
+                const btn = document.getElementById("reset-diet-btn");
+                if (btn) {
+                    btn.classList.add("spinning");
+                    setTimeout(() => {
+                        btn.classList.remove("spinning");
+                    }, 600);
+                }
+
+                currentCalories = 0;
+                currentProtein = 0;
+                saveDailyTrackerData();
+                const targetText = document.getElementById("target-calorie-num").innerText;
+                const targetCal = parseInt(targetText) || 2000;
+                updateDietUI(targetCal);
+                updateDailyOverallScore();
+            };
+
+            function updateDietUI(targetCal) {
+                consumedCaloriesVal.textContent = `${currentCalories} kcal`;
+                consumedProteinVal.textContent = `${currentProtein}g`;
+                const rem = targetCal - currentCalories;
+                remainingCaloriesVal.textContent = `${rem >= 0 ? rem : 0} kcal`;
+                const pct = Math.min(Math.round((currentCalories / targetCal) * 100), 100);
+                dietProgressBar.style.width = `${pct}%`;
+            }
+
+            tabWorkoutBtn.onclick = () => {
+                tabWorkoutBtn.classList.add("active");
+                tabDietBtn.classList.remove("active");
+                workoutView.classList.remove("hidden");
+                dietView.classList.add("hidden");
+            };
+
+            tabDietBtn.onclick = () => {
+                tabDietBtn.classList.add("active");
+                tabWorkoutBtn.classList.remove("active");
+                dietView.classList.remove("hidden");
+                workoutView.classList.add("hidden");
+            };
+
+            function updateQuestsProgress() {
+                let count = 0;
+                taskCheckboxes.forEach((c, idx) => {
+                    if (c.checked) {
+                        count++;
+                        questsChecked[idx] = true;
+                    } else {
+                        questsChecked[idx] = false;
+                    }
+                });
+                const pct = Math.round((count / taskCheckboxes.length) * 100);
+                progressNumber.textContent = pct;
+                progressCircle.style.strokeDashoffset = 264 - (pct / 100) * 264;
+
+                if (pct === 100) {
+                    progressTextTitle.textContent = "অসাধারণ! সব লক্ষ্য সম্পন্ন 🎉";
+                    progressTextSub.textContent = "আজকের সব কোয়েস্ট ১০০% সফল হয়েছে!";
+                } else {
+                    progressTextTitle.textContent = "আজকের ১০০% টাস্ক অগ্রগতি";
+                    progressTextSub.textContent = "প্রতিটি লক্ষ্য সম্পন্ন করে সার্কেল পূর্ণ করুন";
+                }
+                updateDailyOverallScore();
+            }
+
+            function updateDailyOverallScore() {
+                const todayScore = calculateTodayOverall100();
+                if (todayCompletionBadge) {
+                    todayCompletionBadge.textContent = `${todayScore}%`;
+                }
+                renderWeekly100Chart();
+            }
+
+            taskCheckboxes.forEach(cb => {
+                cb.onchange = () => {
+                    updateQuestsProgress();
+                    saveDailyTrackerData();
+
+                    const count = document.querySelectorAll(".task-checkbox:checked").length;
+                    if (count === taskCheckboxes.length) {
+                        const activeTheme = document.documentElement.getAttribute('data-theme');
+                        let confettiColors = ['#10b981', '#34d399', '#f59e0b', '#ffffff'];
+                        if (activeTheme === 'cyan') confettiColors = ['#06b6d4', '#22d3ee', '#38bdf8', '#ffffff'];
+                        if (activeTheme === 'gold') confettiColors = ['#f59e0b', '#fbbf24', '#f97316', '#ffffff'];
+
+                        confetti({
+                            particleCount: 120,
+                            spread: 80,
+                            origin: { y: 0.6 },
+                            colors: confettiColors
+                        });
+                    }
+                };
+            });
+
+            function renderWeekly100Chart() {
+                if (!analyticsSvgWrapper) return;
+
+                let displayData = [...weeklyHistoryScores];
+                if (displayData.length === 0) {
+                    displayData = [
+                        { day: "শনি", score: 80 },
+                        { day: "রবি", score: 90 },
+                        { day: "সোম", score: 75 },
+                        { day: "মঙ্গল", score: 100 },
+                        { day: "বুধ", score: 85 },
+                        { day: "বৃহঃ", score: 95 }
+                    ];
+                }
+
+                const dayNames = ["রবি", "সোম", "মঙ্গল", "বুধ", "বৃহঃ", "শুক্র", "শনি"];
+                const todayName = dayNames[new Date().getDay()];
+                const todayScore = calculateTodayOverall100();
+
+                const chartData = [...displayData];
+                if (chartData.length >= 7) chartData.shift();
+                chartData.push({ day: "আজ (" + todayName + ")", score: todayScore });
+
+                const sum = chartData.reduce((acc, curr) => acc + curr.score, 0);
+                const avg = Math.round(sum / chartData.length);
+                if (weeklyAverageScore) {
+                    weeklyAverageScore.textContent = `${avg}%`;
+                }
+
+                const width = 360;
+                const height = 120;
+                const paddingX = 25;
+                const paddingY = 15;
+                const stepX = (width - paddingX * 2) / (chartData.length - 1 || 1);
+
+                const points = chartData.map((d, i) => {
+                    const x = paddingX + i * stepX;
+                    const y = height - paddingY - (d.score / 100) * (height - paddingY * 2);
+                    return { x, y, day: d.day, score: d.score };
+                });
+
+                const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+                const areaPath = `${linePath} L ${points[points.length - 1].x} ${height - 5} L ${points[0].x} ${height - 5} Z`;
+
+                analyticsSvgWrapper.innerHTML = `
+          <svg viewBox="0 0 ${width} ${height + 25}" class="chart-svg">
+            <defs>
+              <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.45" />
+                <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0" />
+              </linearGradient>
+            </defs>
+
+            <line x1="${paddingX}" y1="${paddingY}" x2="${width - paddingX}" y2="${paddingY}" stroke="#1f293d" stroke-dasharray="3,3" />
+            <text x="${paddingX - 4}" y="${paddingY + 3}" fill="#64748b" font-size="8" text-anchor="end">100%</text>
+
+            <line x1="${paddingX}" y1="${height / 2}" x2="${width - paddingX}" y2="${height / 2}" stroke="#1f293d" stroke-dasharray="3,3" />
+            <text x="${paddingX - 4}" y="${height / 2 + 3}" fill="#64748b" font-size="8" text-anchor="end">50%</text>
+
+            <line x1="${paddingX}" y1="${height - paddingY}" x2="${width - paddingX}" y2="${height - paddingY}" stroke="#1f293d" />
+
+            <path d="${areaPath}" fill="url(#chartGradient)" />
+            <path d="${linePath}" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+            ${points.map(p => `
+              <circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#06090e" stroke="var(--primary)" stroke-width="2.5" />
+              <text x="${p.x}" y="${p.y - 7}" fill="#ffffff" font-size="9" font-weight="800" text-anchor="middle">${p.score}%</text>
+              <text x="${p.x}" y="${height + 14}" fill="#94a3b8" font-size="9.5" font-weight="600" text-anchor="middle">${p.day}</text>
+            `).join('')}
+          </svg>
+        `;
+            }
+
+            logoutBtn.onclick = () => {
+                localStorage.removeItem("active_user_session");
+                location.reload();
+            };
+
+            const session = localStorage.getItem("active_user_session");
+            if (session) {
+                const users = getUsers();
+                if (users[session] && users[session].profile) {
+                    activeUserEmail = session;
+                    loadAndCheckMidnightReset();
+                    showDashboard(users[session].profile);
+                }
+            }
+        });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((reg) => {
+                        console.log('SW Registered:', reg.scope);
+                    })
+                    .catch((err) => {
+                        console.error('SW Failed:', err);
+                    });
+            });
+        }
+    </script>
+
+</body>
+
+</html>

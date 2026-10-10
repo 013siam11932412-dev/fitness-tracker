@@ -1,131 +1,138 @@
-function renderExercises(profile) {
-    let exercises = [];
+// Storage Keys
+const TODAY_KEY = 'healthy_you_today_' + new Date().toISOString().slice(0, 10);
+const HISTORY_KEY = 'healthy_you_weekly_data';
 
-    if (profile.workoutPlace === "home") {
-        if (profile.gender === "female") {
-            exercises = [
-                {
-                    name: "Glute Bridges",
-                    meta: "লোয়ার বডি ও হিপ শেপ",
-                    reps: "৩ সেট • ১৫ বার",
-                    img: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Knee Push-ups",
-                    meta: "হাতের ও বুকের শক্তি",
-                    reps: "৩ সেট • ১০-১২ বার",
-                    img: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Bodyweight Squat",
-                    meta: "পা ও শরীরের ব্যালেন্স",
-                    reps: "৩ সেট • ১৫ বার",
-                    img: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Plank Hold",
-                    meta: "পেটের মেদ ও কোর স্ট্রেংথ",
-                    reps: "৩ সেট • ৩০ সেকেন্ড",
-                    img: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=150&auto=format&fit=crop&q=80"
-                }
-            ];
-        } else {
-            exercises = [
-                {
-                    name: "Standard Push-ups",
-                    meta: "বুক ও ট্রাইসেপস",
-                    reps: "৩ সেট • ১২-১৫ বার",
-                    img: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Bodyweight Squats",
-                    meta: "পায়ের পেশি গঠন",
-                    reps: "৪ সেট • ১৫ বার",
-                    img: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Doorframe / Towel Rows",
-                    meta: "পিঠ ও বাইসেপস",
-                    reps: "৩ সেট • ১২ বার",
-                    img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Plank & Core Hold",
-                    meta: "অ্যাবস ও কোর শক্তি",
-                    reps: "৩ সেট • ৪০ সেকেন্ড",
-                    img: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=150&auto=format&fit=crop&q=80"
-                }
-            ];
-        }
-    } else {
-        // জিম ওয়ার্কআউট
-        if (profile.gender === "female") {
-            exercises = [
-                {
-                    name: "Dumbbell Hip Thrusts",
-                    meta: "লোয়ার বডি স্ট্রেংথ",
-                    reps: "৩ সেট • ১২ বার",
-                    img: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Goblet Squats",
-                    meta: "লেগস ও কোর টোনিং",
-                    reps: "৩ সেট • ১২ বার",
-                    img: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Lat Pulldown Machine",
-                    meta: "পিঠ ও সুন্দর ভঙ্গি",
-                    reps: "৩ সেট • ১২ বার",
-                    img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Dumbbell Shoulder Press",
-                    meta: "কাঁধ ও হাত",
-                    reps: "৩ সেট • ১০ বার",
-                    img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=150&auto=format&fit=crop&q=80"
-                }
-            ];
-        } else {
-            exercises = [
-                {
-                    name: "Barbell Bench Press",
-                    meta: "বুকের পেশির আকার বৃদ্ধি",
-                    reps: "৪ সেট • ৮-১০ বার",
-                    img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Barbell Squats",
-                    meta: "পায়ের মূল শক্তি",
-                    reps: "৪ সেট • ৮-১০ বার",
-                    img: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Lat Pulldown / Cable Row",
-                    meta: "পিঠের বিস্তার (V-Taper)",
-                    reps: "৪ সেট • ১০-১২ বার",
-                    img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=150&auto=format&fit=crop&q=80"
-                },
-                {
-                    name: "Dumbbell Bicep Curls",
-                    meta: "হাতের পেশির গ্রোথ",
-                    reps: "৩ সেট • ১২ বার",
-                    img: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=150&auto=format&fit=crop&q=80"
-                }
-            ];
-        }
+// Default State
+let todayData = JSON.parse(localStorage.getItem(TODAY_KEY)) || {
+    meals: 0,
+    workout: 0,
+    water: 0.0,
+    sleep: 7.0
+};
+
+// UI Elements
+const statMeals = document.getElementById('statMeals');
+const statWorkout = document.getElementById('statWorkout');
+const statWater = document.getElementById('statWater');
+const statSleep = document.getElementById('statSleep');
+
+// Initialize Dashboard
+function renderStats() {
+    statMeals.textContent = `${todayData.meals} / 4`;
+    statWorkout.textContent = `${todayData.workout} / 1`;
+    statWater.textContent = `${todayData.water.toFixed(1)} L`;
+    statSleep.textContent = `${todayData.sleep} h`;
+    saveData();
+    drawWeeklyChart();
+}
+
+function addMetric(type) {
+    if (type === 'meals' && todayData.meals < 4) todayData.meals++;
+    if (type === 'workout') todayData.workout = todayData.workout === 1 ? 0 : 1;
+    if (type === 'water') todayData.water = Math.min(4.0, todayData.water + 0.25);
+    renderStats();
+}
+
+function logSleep() {
+    const hours = prompt('গত রাতে কত ঘণ্টা ঘুমিয়েছেন?', todayData.sleep);
+    if (hours && !isNaN(hours)) {
+        todayData.sleep = parseFloat(hours);
+        renderStats();
+    }
+}
+
+function saveData() {
+    localStorage.setItem(TODAY_KEY, JSON.stringify(todayData));
+
+    // Update weekly dataset
+    let history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [60, 75, 80, 70, 85, 90, 0];
+    // Calculate today's completion percentage (out of 100)
+    const score = Math.round(
+        ((todayData.meals / 4) * 30) +
+        (todayData.workout * 25) +
+        ((todayData.water / 2.5) * 25) +
+        ((Math.min(todayData.sleep, 8) / 8) * 20)
+    );
+    history[6] = Math.min(100, score);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+function resetDay() {
+    if (confirm('আজকের ট্র্যাকার রিসেট করতে চান?')) {
+        todayData = { meals: 0, workout: 0, water: 0.0, sleep: 7.0 };
+        renderStats();
+    }
+}
+
+function scrollToDashboard() {
+    document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+}
+
+function openGoalSelector() {
+    document.getElementById('goals').scrollIntoView({ behavior: 'smooth' });
+}
+
+function selectGoal(goalName) {
+    alert(`"${goalName}" সিলেক্ট হয়েছে! নিচের ট্র্যাকার দিয়ে প্রতিদিনের প্রগ্রেস শুরু করুন।`);
+    scrollToDashboard();
+}
+
+// Canvas-based Weekly Chart
+function drawWeeklyChart() {
+    const canvas = document.getElementById('weeklyChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const width = canvas.width;
+    const height = canvas.height;
+    const history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [60, 70, 80, 65, 85, 90, 75];
+    const days = ['শনি', 'রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহ', 'আজ'];
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Background Grid Lines
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 1;
+    for (let i = 1; i <= 4; i++) {
+        const y = (height - 50) * (i / 4);
+        ctx.beginPath();
+        ctx.moveTo(40, y);
+        ctx.lineTo(width - 20, y);
+        ctx.stroke();
     }
 
-    exerciseContainer.innerHTML = exercises.map(ex => `
-      <div class="exercise-card">
-        <div class="exercise-img-wrap">
-          <img src="${ex.img}" alt="${ex.name}" loading="lazy" />
-        </div>
-        <div class="exercise-info">
-          <strong>${ex.name}</strong>
-          <span>${ex.meta}</span>
-        </div>
-        <span class="exercise-badge">${ex.reps}</span>
-      </div>
-    `).join("");
+    const barWidth = 42;
+    const spacing = (width - 80) / days.length;
+
+    // Draw Bars & Labels
+    days.forEach((day, idx) => {
+        const score = history[idx] || 20;
+        const barHeight = ((height - 80) * (score / 100));
+        const x = 50 + (idx * spacing);
+        const y = height - 40 - barHeight;
+
+        // Bar Color Gradient
+        const grad = ctx.createLinearGradient(0, y, 0, height - 40);
+        grad.addColorStop(0, '#10b981');
+        grad.addColorStop(1, '#064e3b');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.roundRect(x, y, barWidth, barHeight, [8, 8, 0, 0]);
+        ctx.fill();
+
+        // Day Label
+        ctx.fillStyle = '#64748b';
+        ctx.font = '12px Plus Jakarta Sans, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(day, x + (barWidth / 2), height - 15);
+
+        // Percentage Value
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 11px Plus Jakarta Sans, sans-serif';
+        ctx.fillText(`${score}%`, x + (barWidth / 2), y - 8);
+    });
 }
+
+// Initial Call
+renderStats();
